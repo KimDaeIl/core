@@ -1,8 +1,6 @@
 # Created resource.py by KimDaeil on 03/31/2018
 from flask_restful import Resource
 
-__all__ = ["BaseResource"]
-
 
 class BaseResource(Resource):
     def post(self, *args, **kwargs):
