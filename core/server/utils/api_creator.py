@@ -3,6 +3,7 @@
 
 from flask import Response
 from flask import json
+from core.server.utils.validator import validator_decorator
 
 
 class ApiCreator(object):
@@ -10,17 +11,16 @@ class ApiCreator(object):
         self.req = req
         self.func_list = []
 
-    def add(self, next_func):
-        if callable(next_func):
-            self.func_list.append(next_func)
+    def add(self, func):
+        if callable(func):
+            self.func_list.append(func)
 
-    def run(self):
-        data = {}
-        status_code = "200"
-        mimetype = 'application/json'
+    @validator_decorator()
+    def run(self, status="200", data={}):
+        mimetype = "application/json"
 
-        while len(self.func_list) > 0 and status_code == "200":
+        while len(self.func_list) > 0 and status == "200":
             func = self.func_list.pop(0)
-            status_code, data = func(self.req, self.func_list.pop(0) if len(self.func_list) > 0 else None)
+            status_code, data = func(self.req)
 
-        return Response(response=json.dumps(data), status=int(status_code), mimetype=mimetype)
+        return Response(response=json.dumps(data), status=status, mimetype=mimetype)

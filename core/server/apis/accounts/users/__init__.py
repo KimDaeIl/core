@@ -1,10 +1,12 @@
 # Created users.__init__.py by KimDaeil on 03/31/2018
 from . import *
 from . import post
-from flask import request, current_app
+from flask import request
 
-BaseResource = __import__("core.server.apis.common", globals(), locals(), ["BaseResource"], 0).BaseResource
-ApiCreator = __import__("core.server.utils.api_creator", globals(), locals(), ["ApiCreator"], 0).ApiCreator
+from core.server.apis.common import BaseResource
+from core.server.utils.api_creator import ApiCreator
+from core.server.meta.common import get_required_for_sign_up
+
 __all__ = ["Users"]
 
 
@@ -15,8 +17,7 @@ class Users(BaseResource):
     def get(self, *args, **kwargs):
         api_creator = ApiCreator(request)
         api_creator.add(post.validate())
-
-        result = api_creator.run()
+        result = api_creator.run(key=get_required_for_sign_up, req=request)
         return result
 
     def put(self, *args, **kwargs):
