@@ -5,23 +5,31 @@ from flask import request
 
 from core.server.apis.common import BaseResource
 from core.server.utils.api_creator import ApiCreator
-from core.server.meta.common import get_required_for_sign_up
-
+from core.server.meta.common import get_sign_up
 __all__ = ["Users"]
 
 
 class Users(BaseResource):
-    def post(self, *args, **kwargs):
-        return {"Users": "get"}
-
-    def get(self, *args, **kwargs):
+    def post(self):
         api_creator = ApiCreator(request)
         api_creator.add(post.validate())
-        result = api_creator.run(key=get_required_for_sign_up, req=request)
+        result = api_creator.run(
+            key=get_sign_up("required"),
+            type="user.post",
+            req=request)
         return result
 
-    def put(self, *args, **kwargs):
+    def get(self):
+        api_creator = ApiCreator(request)
+        api_creator.add(post.validate())
+        result = api_creator.run(
+            key=get_sign_up("required"),
+            type="user.get",
+            req=request)
+        return result
+
+    def put(self):
         return {"Users": "get"}
 
-    def delete(self, *args, **kwargs):
+    def delete(self):
         return {"Users": "get"}

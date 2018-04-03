@@ -3,14 +3,14 @@ from flask_restful import Resource
 
 
 class BaseResource(Resource):
-    def post(self, *args, **kwargs):
+    def post(self):
         return {"error": "post is not implemented"}
 
-    def get(self, *args, **kwargs):
+    def get(self):
         return {"error": "get is not implemented"}
 
-    def put(self, *args, **kwargs):
+    def put(self):
         return {"error": "put is not implemented"}
 
-    def delete(self, *args, **kwargs):
+    def delete(self):
         return {"error": "delete is not implemented"}

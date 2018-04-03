@@ -3,8 +3,8 @@
 
 user_meta = {
     "signUp": {
-        "all": ["type", "uid", "password", "birthdayYear", "birthdayMonth", "birthdayDay", "gender"],
-        "required": ["type", "uid", "password", "birthdayYear", "birthdayMonth", "birthdayDay", "gender"],
+        "all": ["type", "uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
+        "required": ["type", "uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
         "optional": []
     },
     "type": {
@@ -36,5 +36,5 @@ user_meta = {
 }
 
 
-def get_required_for_sign_up():
-    return user_meta.get("signUp").get("required")
+def get_sign_up(code):
+    return user_meta.get("signUp").get(code) if code and code in user_meta.get("signUp").keys() else []
