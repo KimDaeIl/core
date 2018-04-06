@@ -8,24 +8,39 @@ def validate():
         status = "200"
         data = {}
 
-        post_required = get_sign_up("required")
+        return status, data
 
-        for k in post_required:
-            pass
+    return _
+
+
+# create user
+def create_user():
+    def _(req):
+        status = "200"
+        data = {}
 
         return status, data
 
     return _
 
 
-def create_user():
+# create session
+def create_session():
     def _(req):
-        pass
+        status = "200"
+        data = {}
+
+        return status, data
 
     return _
 
-# create user
-
-# create session
 
 # auth by email
+def send_auth_mail():
+    def _(req):
+        status = "200"
+        data = {}
+
+        return status, data
+
+    return _
