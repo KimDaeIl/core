@@ -1,0 +1,17 @@
+{
+    "method": {"POST"|"GET"|"PUT"|"DELETE"},
+    "resource": "/users",
+    "code": "400"
+    "timestamp": 129047389472384,
+    "date": yyyy-mm-dd,
+    "result": {
+
+        # RESULT AS SUCCESS
+        "data":{
+        }
+
+        # RESULT AS ERROR
+        "message": "content",
+        "details":[]
+    }
+}
