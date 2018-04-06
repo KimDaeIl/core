@@ -17,6 +17,8 @@ class Users(BaseResource):
             key=get_sign_up("required"),
             type="user.post",
             req=request)
+
+
         return result
 
     def get(self):

@@ -37,4 +37,6 @@ user_meta = {
 
 
 def get_sign_up(code):
-    return user_meta.get("signUp").get(code) if code and code in user_meta.get("signUp").keys() else []
+    return user_meta.get("signUp").get(code) \
+        if code and code in user_meta.get("signUp").keys() \
+        else user_meta.get("signUp")
