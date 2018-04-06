@@ -125,6 +125,9 @@ $RECYCLE.BIN/
 *.lnk
 
 
-### ignore virtualenv ###
+### custom ###
 venv/
+app/
+__pycache__/
+
 # End of https://www.gitignore.io/api/macos,linux,windows,pycharm+all
