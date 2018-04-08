@@ -25,7 +25,7 @@ class ApiCreator(object):
             status, result = func(self.req)
 
         response = current_app.response_class(data=result, status=status,
-                                              method=self.req.method, resource=self.req.path)
+                                              method=self.req.method, url=self.req.path)
 
         # TODO 2018. 04. 06: make log contain of request or response
 

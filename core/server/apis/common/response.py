@@ -8,29 +8,29 @@ import datetime
 class BaseResponse(Response):
     charset = "utf-8"
 
-    def __init__(self, data=[], status="200",
-                 method="GET", resource="/", mimetype="application/json"):
+    def __init__(self, data=None, status="200",
+                 method="GET", url="/", mimetype="application/json"):
         result = {}
 
         if (status == "200"):
             result["data"] = data
         else:
-            if not isinstance(data, list):
-                data = [data]
+            if not isinstance(data, str):
+                data = str(data)
 
-            result["message"] = parse_error_code(status)
+            result["message"] = parse_error_code(status, data)
             result["details"] = data
 
-        response = ResponseData(status, method, resource, result)
+        response = ResponseData(status, method, url, result)
         super(Response, self).__init__(response=json.dumps(response()), status=status,
                                        mimetype=mimetype)
 
 
 class ResponseData:
-    def __init__(self, code, method, resource, result):
+    def __init__(self, code, method, url, result):
         self.code = code
         self.method = method
-        self.resource = resource
+        self.url = url
         self.result = result
         self.timestamp = datetime.datetime.now().timestamp()
 
@@ -38,11 +38,11 @@ class ResponseData:
         return self.__dict__
 
 
-def parse_error_code(code):
+def parse_error_code(code, error_keyword):
     from core.server.meta import error_code
 
     error_msg = ""
-    if code:
-        error_msg = error_code.get_error_message(code)
+    if code and error_keyword:
+        error_msg = error_code.get_error_message(code, error_keyword)
 
     return error_msg

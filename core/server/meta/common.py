@@ -3,15 +3,11 @@
 
 user_meta = {
     "signUp": {
-        "all": ["type", "uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
-        "required": ["type", "uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
+        "all": ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
+        "required": ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
         "optional": []
     },
-    "type": {
-        "default": "email",
-        "enum": ["email"]},
-    "uid": {
-        "type": "email",
+    "email": {
         "minLength": 10,
         "maxLength": 255
     },

@@ -4,7 +4,7 @@ error = {
     "400": {
         "default": "bed request",
         "user.post": ["type", "uid", "password", "birthdayYear", "birthdayMonth", "birthdayDay", "gender"],
-        "uid": "uid",
+        "uid": "이메일을 확인해주세요오.",
         "password": "password",
         "birthYear": "birthdayYear",
         "birthMonth": "birthdayMonth",
@@ -31,9 +31,17 @@ def get_400_error_message(code):
 
 
 def get_error_message(code):
-
     print("error code is {}".format(code))
     if code in __allowed_error:
         return error.get(code).get("default")
+
+    return error.get("400").get("default")
+
+
+def get_error_message(error_code, keyword):
+    if error_code in __allowed_error:
+        return error.get(error_code).get(keyword) if keyword and keyword in error.get(error_code).keys() else error.get(
+            error_code).get(
+            "default")
 
     return error.get("400").get("default")
