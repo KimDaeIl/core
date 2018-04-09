@@ -2,6 +2,5 @@
 
 from . import *
 from .api_creator import ApiCreator
-from .validator import validator_decorator
 
 __all__ = ["ApiCreator", "validator"]

@@ -1,6 +1,5 @@
 # Created exception.py by KimDaeil on 04/08/2018
 from flask import current_app, request
-from werkzeug.exceptions import HTTPException
 
 
 class DefaultException(Exception):
