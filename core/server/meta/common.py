@@ -1,5 +1,5 @@
 # Created common.py by KimDaeil on 04/03/2018
-
+import datetime
 
 user_meta = {
     "signUp": {
@@ -17,16 +17,23 @@ user_meta = {
     },
     "password": {
         "maxLength": 16,
-        "minLength": 8,
+        "minLength": 12,
         "special": {
             "minLength": 1,
             "maxLength": 14,
-            "enum": ["!#$%&()*+,-./:<>?@\^_~"]
+            "enum": "!#\$%()*\+,-\./:<>?@\^_~"
         },
         "upper_case": {
             "minLength": 1,
             "maxLength": 14
         }
+    },
+    "birthYear": {
+        "minLength": 1970
+    },
+    "birthMonth": {
+        "minLength": 1,
+        "maxLength": 12
     }
 
 }

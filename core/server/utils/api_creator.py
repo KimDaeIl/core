@@ -2,7 +2,7 @@
 
 
 from flask import current_app
-from core.server.utils.validator import validator_decorator
+from core.server.utils.validations.common import validator_decorator
 
 
 class ApiCreator(object):
@@ -24,7 +24,7 @@ class ApiCreator(object):
             func = self.func_list.pop(0)
             status, result = func(self.req)
 
-        response = current_app.response_class(data=result, status=status,
+        response = current_app.response_class(data=result,
                                               method=self.req.method, url=self.req.path)
 
         # TODO 2018. 04. 06: make log contain of request or response
