@@ -21,7 +21,7 @@ user_meta = {
         "special": {
             "minLength": 1,
             "maxLength": 14,
-            "enum": "!#\$%&()*+,-./:<>?@\^_~"
+            "enum": "!#\$%()*\+,-\./:<>?@\^_~"
         },
         "upper_case": {
             "minLength": 1,
@@ -29,8 +29,7 @@ user_meta = {
         }
     },
     "birthYear": {
-        "minLength": 1970,
-        "maxLength": datetime.datetime.now().year
+        "minLength": 1970
     },
     "birthMonth": {
         "minLength": 1,

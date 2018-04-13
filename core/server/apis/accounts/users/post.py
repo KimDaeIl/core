@@ -18,17 +18,11 @@ def validate():
         # password
         validate_password(req_data.get("password"))
 
-        # birthYear
-        validate_birth_year(req_data.get("birthYear"))
+        # birth_date
+        validate_birth_date(req_data.get("birthYear"), req_data.get("birthMonth"), req_data.get("birthDay"))
 
         # birthMonth
-        validate_birth_month(req_data.get("birthMonth"))
-
-        # birthDay
-        # validate_birth_day(req_data.get("birthDay"))
-
-        # gender
-
+        validate_gender(req_data.get("gender"))
 
         return status, data
 

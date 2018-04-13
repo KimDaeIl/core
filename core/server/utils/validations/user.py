@@ -1,6 +1,6 @@
 # Created user.py by KimDaeil on 04/08/2018
 import re
-from flask import current_app
+from datetime import datetime
 
 from core.server.meta.common import user_meta
 from core.server.apis.common.exceptions import BadRequestException
@@ -38,20 +38,30 @@ def validate_password(password):
         raise BadRequestException("password")
 
 
+def validate_birth_date(year, month, day):
+    import datetime
+
+    year = validate_birth_year(year)
+    month = validate_birth_month(year, month)
+    validate_birth_day(year, month, day)
+
+
 def validate_birth_year(year):
     year_meta = user_meta.get("birthYear")
 
     if not isinstance(year, int):
         try:
             year = int(year)
-        except ValueError as e:
+        except ValueError:
             raise BadRequestException("birthYear")
 
-    if year_meta.get("minLength") > year > year_meta.get("maxLength"):
+    if year_meta.get("minLength") > year > datetime.now().year:
         raise BadRequestException("birthYear")
 
+    return year
 
-def validate_birth_month(month):
+
+def validate_birth_month(year, month):
     month_meta = user_meta.get("birthMonth")
 
     if not isinstance(month, int):
@@ -60,6 +70,38 @@ def validate_birth_month(month):
         except ValueError:
             raise BadRequestException("birthMonth")
 
-    print(month_meta)
     if month_meta.get("minLength") > month > month_meta.get("maxLength"):
         raise BadRequestException("birthMonth")
+
+    now = datetime.now()
+    if year == now.year and month < now.month:
+        raise BadRequestException("birthMonth")
+
+    return month
+
+
+def validate_birth_day(year, month, day):
+    if not isinstance(day, int):
+        try:
+            day = int(day)
+        except ValueError:
+            raise BadRequestException("birthDay")
+
+    import calendar
+
+    last_day = calendar.monthrange(year, month)[1]
+    if 1 > day > last_day:
+        raise BadRequestException("birthYear")
+
+    now = datetime.now()
+    today = now.day
+    if now.year == year and now.month and day < today:
+        raise BadRequestException("birthDay")
+
+
+def validate_gender(gender):
+    meta = user_meta.get("gender")
+
+    print(meta.get("enum"))
+    if gender not in meta.get("enum"):
+        raise BadRequestException("gender")
