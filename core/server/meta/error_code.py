@@ -1,15 +1,47 @@
 # Created error_code.py by KimDaeil on 04/03/2018
+from .common import user_meta
 
 error = {
+    "4": {
+        "uncaught": {
+            "default": "잘못된 요청입니다."
+        }
+    },
     "400": {
         "default": "bed request",
+        "uncaught": "잘못된 요청입니다",
+        "uid": {
+            "format": "이메일 형식이 맞지 않습니다."
+        },
+        "password": {
+            "format": "비밀번호의 길이는 {0} ~ {1}자, 대문자는 최소 {2}자, 특수문자는 최소 1자에 {3} 만 허용됩니다.".format(
+                user_meta.get("password").get("minLength"), user_meta.get("password").get("maxLength"),
+                user_meta.get("password").get("upper_case").get("minLength"),
+                ", ".join(user_meta.get("password").get("special").get("enum").replace("\\", ""))),
+            "length": "비밀번호의 길이는 {0} ~ {1}자 입니다".format(user_meta.get("password").get("minLength"),
+                                                        user_meta.get("password").get("maxLength")),
+            "special": "허용되는 특수 문자는 [{0}] 입니다".format(
+                ", ".join(user_meta.get("password").get("special").get("enum").replace("\\", ""))),
+            "upper": "대문자 최소 {0}자는 포함되어야 합니다."
+        },
         "user.post": ["type", "uid", "password", "birthdayYear", "birthdayMonth", "birthdayDay", "gender"],
-        "uid": "이메일을 확인해주세요오.",
-        "password": "password",
-        "birthYear": "birthdayYear",
-        "birthMonth": "birthdayMonth",
-        "birthDay": "birthdayDay",
-        "gender": "gender"
+        "birthYear": {
+            "outOfRange": "잘못된 연도입니다."
+        },
+        "birthMonth": {
+            "outOfRange": "잘못된 월 입니다.",
+            "outOfNow": "이번 달보다 미래네요?"
+        },
+        "birthDay": {
+            "outOfRangeMonth": "입력한 월과 일의 정보를 확인해주세요.",
+            "oufOfNow": "오늘보다 미래네요."
+        },
+        "gender": {
+            "format": "입력된 성별 정보를 확인해주세요."
+        },
+        "typeError": {
+            "int": "숫자만 입력할 수 있습니다."
+        }
 
     }
 }

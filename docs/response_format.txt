@@ -11,7 +11,7 @@
         }
 
         # RESULT AS ERROR
-        "message": "content",
-        "details":[]
+        "attribute": "content",
+        "details": ""
     }
 }

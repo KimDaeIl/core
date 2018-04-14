@@ -21,7 +21,7 @@ user_meta = {
         "special": {
             "minLength": 1,
             "maxLength": 14,
-            "enum": "!#\$%()*\+,-\./:<>?@\^_~"
+            "enum": "!#$%()*+-./:<>?@^_~"
         },
         "upper_case": {
             "minLength": 1,

@@ -8,20 +8,10 @@ import datetime
 class BaseResponse(Response):
     charset = "utf-8"
 
-    def __init__(self, data=None, status="200",
+    def __init__(self, data={}, status="200",
                  method="GET", url="/", mimetype="application/json"):
-        result = {}
 
-        if (status == "200"):
-            result["data"] = data
-        else:
-            if not isinstance(data, str):
-                data = str(data)
-
-            result["message"] = parse_error_code(status, data)
-            result["details"] = data
-
-        response = ResponseData(status, method, url, result)
+        response = ResponseData(status, method, url, data)
         super(Response, self).__init__(response=json.dumps(response()), status=status,
                                        mimetype=mimetype)
 

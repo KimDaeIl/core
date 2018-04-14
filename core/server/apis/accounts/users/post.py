@@ -1,5 +1,4 @@
 # Created users.post.py by KimDaeil on 03/31/2018
-from core.server.meta.common import get_sign_up
 from core.server.utils.validations.user import *
 
 
