@@ -17,25 +17,26 @@ def validate_uid(uid):
     is_valid = is_valid and bool(re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", uid))
 
     if not is_valid:
-        raise BadRequestException("uid")
+        raise BadRequestException("uid", "format")
 
 
 def validate_password(password):
-    is_valid = False
     password_meta = user_meta.get("password")
+
     if not isinstance(password, str):
         password = str(password)
 
     # TODO 2018.04. 08: decryption by AES with key in config of app
 
-    is_valid = True if password_meta.get("minLength") <= len(password) <= password_meta.get('maxLength') else False
-    is_valid = is_valid and bool(r"(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[{0}])(?=.{{{1}}},{{{2}}})".format(
-        password_meta.get("special").get("enum"),
-        password_meta.get("minLength"),
-        password_meta.get("maxLength")))
+    # 길이
+    if len(password) < password_meta.get("minLength") or password_meta.get('maxLength') < len(password):
+        raise BadRequestException("password", "length")
 
-    if not is_valid:
-        raise BadRequestException("password")
+    if not bool(re.match(r"(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[{0}])(?=.{{{1},{2}}})".format(
+            password_meta.get("special").get("enum"),
+            password_meta.get("minLength"),
+            password_meta.get("maxLength")), password)):
+        raise BadRequestException("password", "format")
 
 
 def validate_birth_date(year, month, day):
@@ -53,10 +54,10 @@ def validate_birth_year(year):
         try:
             year = int(year)
         except ValueError:
-            raise BadRequestException("birthYear")
+            raise BadRequestException("typeError", "int")
 
     if year_meta.get("minLength") > year > datetime.now().year:
-        raise BadRequestException("birthYear")
+        raise BadRequestException("birthYear", "outOfRange")
 
     return year
 
@@ -68,14 +69,14 @@ def validate_birth_month(year, month):
         try:
             month = int(month)
         except ValueError:
-            raise BadRequestException("birthMonth")
+            raise BadRequestException("typeError", "int")
 
     if month_meta.get("minLength") > month > month_meta.get("maxLength"):
-        raise BadRequestException("birthMonth")
+        raise BadRequestException("birthMonth", "outOfRange")
 
     now = datetime.now()
     if year == now.year and month < now.month:
-        raise BadRequestException("birthMonth")
+        raise BadRequestException("birthMonth", "outOfNow")
 
     return month
 
@@ -85,23 +86,22 @@ def validate_birth_day(year, month, day):
         try:
             day = int(day)
         except ValueError:
-            raise BadRequestException("birthDay")
+            raise BadRequestException("typeError", "int")
 
     import calendar
 
     last_day = calendar.monthrange(year, month)[1]
     if 1 > day > last_day:
-        raise BadRequestException("birthYear")
+        raise BadRequestException("birthYear", "outOfRangeMonth")
 
     now = datetime.now()
     today = now.day
-    if now.year == year and now.month and day < today:
-        raise BadRequestException("birthDay")
+    if now.year == year and now.month == month and day < today:
+        raise BadRequestException("birthDay", "oufOfNow")
 
 
 def validate_gender(gender):
     meta = user_meta.get("gender")
 
-    print(meta.get("enum"))
     if gender not in meta.get("enum"):
-        raise BadRequestException("gender")
+        raise BadRequestException("gender", "format")
