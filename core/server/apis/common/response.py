@@ -1,6 +1,6 @@
 # Created resopnse.py by KimDaeil on 04/05/2018
 
-from flask import Response
+from flask import Response, request
 import json
 import datetime
 
@@ -8,10 +8,8 @@ import datetime
 class BaseResponse(Response):
     charset = "utf-8"
 
-    def __init__(self, data={}, status="200",
-                 method="GET", url="/", mimetype="application/json"):
-
-        response = ResponseData(status, method, url, data)
+    def __init__(self, data={}, status="200", mimetype="application/json"):
+        response = ResponseData(status, request.method, request.url, data)
         super(Response, self).__init__(response=json.dumps(response()), status=status,
                                        mimetype=mimetype)
 

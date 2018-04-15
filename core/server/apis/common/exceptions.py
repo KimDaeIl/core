@@ -1,5 +1,5 @@
 # Created exception.py by KimDaeil on 04/08/2018
-from flask import current_app, request
+from flask import current_app
 from core.server.meta.error_code import error
 
 
@@ -19,8 +19,7 @@ class DefaultException(Exception):
         print(self.data)
 
     def __call__(self, *args, **kwargs):
-        return current_app.response_class(data=self.data, status=self.status_code,
-                                          method=request.method, url=request.url)
+        return current_app.response_class(data=self.data, status=self.status_code)
 
 
 # 400

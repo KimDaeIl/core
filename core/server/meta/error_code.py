@@ -11,9 +11,11 @@ error = {
         "default": "bed request",
         "uncaught": "잘못된 요청입니다",
         "uid": {
+            "default": "email이 없는 데예?",
             "format": "이메일 형식이 맞지 않습니다."
         },
         "password": {
+            "default": "비밀번호가 없는데예?",
             "format": "비밀번호의 길이는 {0} ~ {1}자, 대문자는 최소 {2}자, 특수문자는 최소 1자에 {3} 만 허용됩니다.".format(
                 user_meta.get("password").get("minLength"), user_meta.get("password").get("maxLength"),
                 user_meta.get("password").get("upper_case").get("minLength"),
@@ -24,19 +26,22 @@ error = {
                 ", ".join(user_meta.get("password").get("special").get("enum").replace("\\", ""))),
             "upper": "대문자 최소 {0}자는 포함되어야 합니다."
         },
-        "user.post": ["type", "uid", "password", "birthdayYear", "birthdayMonth", "birthdayDay", "gender"],
         "birthYear": {
+            "default": "생년이 없는데예?",
             "outOfRange": "잘못된 연도입니다."
         },
         "birthMonth": {
+            "default": "생월이 없는데예?",
             "outOfRange": "잘못된 월 입니다.",
             "outOfNow": "이번 달보다 미래네요?"
         },
         "birthDay": {
+            "default": "생일이 없는데예?",
             "outOfRangeMonth": "입력한 월과 일의 정보를 확인해주세요.",
             "oufOfNow": "오늘보다 미래네요."
         },
         "gender": {
+            "default": "성별이 없는데예?",
             "format": "입력된 성별 정보를 확인해주세요."
         },
         "typeError": {

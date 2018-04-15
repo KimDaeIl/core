@@ -6,8 +6,7 @@ from core.server.utils.validations.common import validator_decorator
 
 
 class ApiCreator(object):
-    def __init__(self, req):
-        self.req = req
+    def __init__(self):
         self.func_list = []
 
     def add(self, func):
@@ -17,15 +16,14 @@ class ApiCreator(object):
     @validator_decorator()
     def run(self, **kwargs):
 
-        result = kwargs["result"] if kwargs is not None and "result" in kwargs else {}
+        data = kwargs["data"] if kwargs is not None and "data" in kwargs else {}
         status = kwargs["status"] if kwargs is not None and "status" in kwargs else "400"
 
         while len(self.func_list) > 0 and status == "200":
             func = self.func_list.pop(0)
-            status, result = func(self.req)
+            data, status = func(data)
 
-        response = current_app.response_class(data=result,
-                                              method=self.req.method, url=self.req.path)
+        response = current_app.response_class(data=data)
 
         # TODO 2018. 04. 06: make log contain of request or response
 

@@ -11,11 +11,10 @@ __all__ = ["Users"]
 
 class Users(BaseResource):
     def post(self):
-        api_creator = ApiCreator(request)
+        api_creator = ApiCreator()
         api_creator.add(post.validate())
         result = api_creator.run(
             key=get_sign_up("required"),
-            type="user.post",
             req=request)
 
 
@@ -26,7 +25,6 @@ class Users(BaseResource):
         api_creator.add(post.validate())
         result = api_creator.run(
             key=get_sign_up("required"),
-            type="user.get",
             req=request)
         return result
 

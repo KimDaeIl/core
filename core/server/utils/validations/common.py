@@ -14,23 +14,16 @@ def validator_decorator(*args, **kwargs):
 
             req = kwargs.get("req")
 
-            if req:
+            data = req.form.to_dict()
+            data.update(req.args.to_dict())
 
-                error_list = []
+            need_keys = kwargs.get("key")
+            for k in need_keys:
 
-                data = req.form.to_dict()
-                data.update(req.args.to_dict())
+                if k not in data or data[k] == "":
+                    raise BadRequestException(attribute=k, details="default")
 
-                need_keys = kwargs.get("key")
-                for k in need_keys:
-
-                    if k not in data or data[k] == "":
-                        raise BadRequestException(k)
-
-            else:
-                raise BadRequestException(None)
-
-            return func(*args, status="200", result={})
+            return func(*args, status="200", data=data)
 
         return validator
 
