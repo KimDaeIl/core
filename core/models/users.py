@@ -2,7 +2,7 @@
 
 
 class Users:
-    id = 0
+    id = 1
 
     def __init__(self, uid, password, birth_year, birth_month, birth_day, gender):
         self.uid = uid

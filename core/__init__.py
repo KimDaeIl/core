@@ -12,3 +12,7 @@ def before_first_request():
     @current_app.errorhandler(BadRequestException)
     def bed_request_handler(e):
         return e()
+
+    @current_app.errorhandler(InternalServerErrorException)
+    def internal_server_handler(e):
+        return e()

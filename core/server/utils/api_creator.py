@@ -25,6 +25,4 @@ class ApiCreator(object):
 
         response = current_app.response_class(data=data)
 
-        # TODO 2018. 04. 06: make log contain of request or response
-
         return response
