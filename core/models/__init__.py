@@ -4,9 +4,7 @@ from . import *
 from core.server.utils.orm import db
 import datetime
 
-__all__ = ["DBModel", "String", "Int", "DateTime", "BigInt"]
-
-DBModel = db.Model
+__all__ = ["db", "String", "Int", "DateTime", "BigInt"]
 
 
 class BaseColumn(db.Column):

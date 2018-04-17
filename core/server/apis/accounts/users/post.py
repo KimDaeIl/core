@@ -32,11 +32,12 @@ def validate():
 # 소셜이나 전번 가입 시
 def create_user():
     def _(data):
+        result = {}
         user = Users(uid=data.get("uid"), password=data.get("password"), birth_year=data.get("birthYear"),
                      birth_month=data.get("birthMonth"), birth_day=data.get("birthDay"),
                      gender=data.get("gender"))
 
-        result = user.create_user()
+        result["user"] = user.create_user()
 
         if result.get("id") == 0:
             raise InternalServerErrorException(attribute="create", details="user")

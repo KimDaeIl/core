@@ -3,10 +3,10 @@ from core.models import *
 import datetime
 
 
-class Users(DBModel):
+class Users(db.Model):
     __tablename__ = "USERS"
 
-    id = BigInt("id", primary_key=True, index=True)
+    id = BigInt("id", primary_key=True, index=True, autoincrement=True)
     uid = String("uid", 255)
     password = String("password", 256)
     birth_year = Int("birth_year", default=1970)
@@ -15,9 +15,8 @@ class Users(DBModel):
     gender = String("gender", default='f')
     created_at = DateTime("created_at")
 
-    def __init__(self, _id, uid, password, birth_year, birth_month, birth_day, gender,
+    def __init__(self, uid, password, birth_year, birth_month, birth_day, gender,
                  created_at=datetime.datetime.now()):
-        self.id = _id
         self.uid = uid
         self.password = password
         self.birth_year = birth_year
@@ -43,4 +42,6 @@ class Users(DBModel):
 
     def create_user(self):
         print("create_user")
+        db.session.add(self)
+        print("commit", db.session.commit())
         return self.to_json(ignore_password=False)
