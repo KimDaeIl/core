@@ -15,6 +15,7 @@ class Users(db.Model):
     gender = String("gender", default='f')
     created_at = DateTime("created_at")
 
+
     def __init__(self, uid, password, birth_year, birth_month, birth_day, gender,
                  created_at=datetime.datetime.now()):
         self.uid = uid

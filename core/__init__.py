@@ -1,11 +1,11 @@
 # Created core.__init__.py by KimDaeil on 03/31/2018
 from core.server.apis.common.exceptions import *
 from core.server.apis.common.response import BaseResponse
-from core.server.utils.orm import db
 
 
 def before_first_request():
     from flask import current_app
+    from core.models import db
 
     current_app.response_class = BaseResponse
 
