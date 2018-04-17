@@ -1,10 +1,12 @@
 # Created models.__init__.py by KimDaeil on 03/31/2018
 
 from . import *
-from core.server.utils.orm import db
+from flask_sqlalchemy import SQLAlchemy
 import datetime
 
 __all__ = ["db", "String", "Int", "DateTime", "BigInt"]
+
+db = SQLAlchemy()
 
 
 class BaseColumn(db.Column):

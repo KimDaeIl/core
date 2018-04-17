@@ -7,7 +7,7 @@ class Users(db.Model):
     __tablename__ = "USERS"
 
     id = BigInt("id", primary_key=True, index=True, autoincrement=True)
-    uid = String("uid", 255)
+    uid = String("uid", 255, unique=True)
     password = String("password", 256)
     birth_year = Int("birth_year", default=1970)
     birth_month = Int("birth_month", default=1)
