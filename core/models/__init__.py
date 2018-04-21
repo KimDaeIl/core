@@ -1,8 +1,8 @@
 # Created models.__init__.py by KimDaeil on 03/31/2018
 
-from . import *
-from flask_sqlalchemy import SQLAlchemy
 import datetime
+from flask_sqlalchemy import SQLAlchemy
+from . import *
 
 __all__ = ["db", "String", "Int", "DateTime", "BigInt"]
 
@@ -10,6 +10,12 @@ db = SQLAlchemy()
 
 
 class BaseColumn(db.Column):
+    def params(self, *optionaldict, **kwargs):
+        return self._params(False, optionaldict, kwargs)
+
+    def unique_params(self, *optionaldict, **kwargs):
+        return self._params(True, optionaldict, kwargs)
+
     def __init__(self, *args, **kwarg):
         if 'nullable' not in kwarg:
             kwarg['nullable'] = False
@@ -42,6 +48,6 @@ class DateTime(BaseColumn):
         # 1. making time zone about server and user
         # 2. make time zone about server
         if 'default' not in kwargs:
-            kwargs['default'] = datetime.datetime.utcnow()
+            kwargs['default'] = datetime.datetime.now()
 
         super().__init__(name, db.DateTime, **kwargs)

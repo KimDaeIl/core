@@ -1,13 +1,13 @@
 # Created users.post.py by KimDaeil on 03/31/2018
 from core.server.utils.validations.user import *
 from core.models.users import Users
+from core.models.sessions import Sessions
 from core.server.apis.common.exceptions import InternalServerErrorException
 
 
 # validate: check essential data to sign up
 def validate():
     def _(data):
-        print("user.post.validate")
         status = "200"
 
         #  uid
@@ -33,9 +33,15 @@ def validate():
 def create_user():
     def _(data):
         result = {}
-        user = Users(uid=data.get("uid"), password=data.get("password"), birth_year=data.get("birthYear"),
-                     birth_month=data.get("birthMonth"), birth_day=data.get("birthDay"),
-                     gender=data.get("gender"))
+
+        user = Users()
+        user.id = None
+        user.uid = data.get("uid")
+        user.password = data.get("password")
+        user.birth_year = data.get("birthYear")
+        user.birth_month = data.get("birthMonth")
+        user.birth_day = data.get("birthDay")
+        user.gender = data.get("gender")
 
         result["user"] = user.create_user()
 
@@ -50,8 +56,17 @@ def create_user():
 # create session
 def create_session():
     def _(data):
-        result = {}
+        # if "id" not in data and data["id"] is None:
+        #     TODO: 2018. 04. 20. raise ERROR
+        # pass
 
+        session = Sessions.create_session_by_user(data.get("user", {}))
+
+        if session.id == 0:
+            # TODO: 2018. 04. 20. raise error
+            pass
+
+        data['user'].update({"session": session.create_session()})
         return data, "200"
 
     return _

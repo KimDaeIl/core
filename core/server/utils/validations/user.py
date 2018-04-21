@@ -4,6 +4,7 @@ from datetime import datetime
 
 from core.server.meta.common import user_meta
 from core.server.apis.common.exceptions import BadRequestException
+from core.server.utils.encryption import AESCipher
 
 
 def validate_uid(uid):
@@ -27,6 +28,8 @@ def validate_password(password):
         password = str(password)
 
     # TODO 2018.04. 08: decryption by AES with key in config of app
+    # aes = AESCipher(current_app.config["SECRET_KEY"])
+    # password = aes.decrypt(password)
 
     # 길이
     if len(password) < password_meta.get("minLength") or password_meta.get('maxLength') < len(password):
@@ -40,8 +43,6 @@ def validate_password(password):
 
 
 def validate_birth_date(year, month, day):
-    import datetime
-
     year = validate_birth_year(year)
     month = validate_birth_month(year, month)
     validate_birth_day(year, month, day)

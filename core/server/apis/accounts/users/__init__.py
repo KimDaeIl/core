@@ -15,7 +15,7 @@ class Users(BaseResource):
         api_creator = ApiCreator()
         api_creator.add(post.validate())
         api_creator.add(post.create_user())
-        # api_creator.add(post.create_session())
+        api_creator.add(post.create_session())
         # api_creator.add(post.send_auth_mail())
         result= api_creator.run(
             key=get_sign_up("required"),

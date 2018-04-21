@@ -7,11 +7,13 @@ class Config(object):
 class TestConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://root:root1592@api-dev-rds.c2w11tiph4ya.ap-northeast-2.rds.amazonaws.com:5432/test'
+    SECRET_KEY = "LALAVLA"
 
 
 class ProductConfig(Config):
     # SQLALCHEMY_DATABASE_URI = 'postgresql://root:root1592@api-dev-rds.c2w11tiph4ya.ap-northeast-2.rds.amazonaws.com:5432/test'
-    pass
+    SECRET_KEY = "key"
+
 
 
 def get_config(is_test=True):

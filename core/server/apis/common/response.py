@@ -9,7 +9,6 @@ class BaseResponse(Response):
     charset = "utf-8"
 
     def __init__(self, data={}, status="200", mimetype="application/json"):
-        print("BaseResponse", data)
         response = ResponseData(status, request.method, request.url, data)
         super(Response, self).__init__(response=json.dumps(response()), status=status,
                                        mimetype=mimetype)
