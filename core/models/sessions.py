@@ -21,9 +21,6 @@ class Sessions(db.Model):
     salt = String("salt", 126)
     created_at = DateTime("created_at")
 
-    def __init__(self):
-        self.salt = make_salt()
-
     def to_json(self):
         return {
             "id": self.id,
@@ -54,7 +51,8 @@ class Sessions(db.Model):
 
         session = cls()
         session.id = user.get("id", 0)
-        session.session = generate_session(user.get("id"), user.get("uid"), session.salt)
+        session.salt = user.get("salt", "")
+        session.session = generate_session(user.get("id"), request.remote_addr, user.salt)
         session.ip_address = request.remote_addr
         session.platform = user_agent.platform if user_agent.platform else ""
         session.platform_version = user_agent.version if user_agent.version else ""
@@ -66,14 +64,8 @@ class Sessions(db.Model):
         pass
 
 
-def make_salt():
-    salt = base64.b64encode(sha3_256(str(datetime.now()).encode()).digest()).decode('utf-8')
-
-    return AESCipher().encrypt(salt)
-
-
-def generate_session(_id, email, salt):
-    session = "{}_{}_{}".format(_id, email, salt)
+def generate_session(_id, ip_address, salt):
+    session = "{}_{}_{}".format(_id, ip_address, salt)
     session = AESCipher().encrypt(session)
 
     return session
