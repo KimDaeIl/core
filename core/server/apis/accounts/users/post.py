@@ -1,4 +1,6 @@
 # Created users.post.py by KimDaeil on 03/31/2018
+from hashlib import sha3_256
+import base64
 from core.server.utils.validations.user import *
 from core.models.users import Users
 from core.models.sessions import Sessions
@@ -37,7 +39,8 @@ def create_user():
         user = Users()
         user.id = None
         user.uid = data.get("uid")
-        user.password = data.get("password")
+        user.salt = base64.b64encode(sha3_256(str(datetime.now()).encode()).digest()).decode('utf-8')
+        user.password = sha3_256("{}{}".format(data.get("password"), user.salt).encode()).digest()
         user.birth_year = data.get("birthYear")
         user.birth_month = data.get("birthMonth")
         user.birth_day = data.get("birthDay")

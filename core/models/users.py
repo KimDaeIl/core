@@ -7,6 +7,7 @@ class Users(db.Model):
 
     id = db.Column("id", db.BigInteger, primary_key=True, index=True, autoincrement=True)
     uid = String("uid", 255, index=True)
+    salt = String("salt", 56)
     password = String("password", 256)
     birth_year = Int("birth_year", default=1970)
     birth_month = Int("birth_month", default=1)

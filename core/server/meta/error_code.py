@@ -49,6 +49,14 @@ error = {
         }
 
     },
+    "401": {
+        "default": {
+            "default": "접근 권한이 없습니다."
+        },
+        "userId": {
+            "bad_user_information": "접근 정보가 잘못되었습니다."
+        }
+    },
     "500": {
         "create": {
             "user": "내부서버 오류로 실패했습니다 다시 시도 ㄱㄱ"

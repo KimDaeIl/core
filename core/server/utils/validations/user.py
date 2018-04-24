@@ -28,8 +28,7 @@ def validate_password(password):
         password = str(password)
 
     # TODO 2018.04. 08: decryption by AES with key in config of app
-    # aes = AESCipher(current_app.config["SECRET_KEY"])
-    # password = aes.decrypt(password)
+    password = AESCipher().decrypt(password)
 
     # 길이
     if len(password) < password_meta.get("minLength") or password_meta.get('maxLength') < len(password):

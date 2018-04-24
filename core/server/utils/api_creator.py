@@ -23,6 +23,9 @@ class ApiCreator(object):
             func = self.func_list.pop(0)
             data, status = func(data)
 
+        print("ApiCreator.run.status >> ", status)
+        print("ApiCreator.run.data >> ", data)
+
         response = current_app.response_class(data=data)
 
         return response

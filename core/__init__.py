@@ -18,6 +18,10 @@ def before_first_request():
     def bed_request_handler(e):
         return e()
 
+    @current_app.errorhandler(UnauthorizedException)
+    def unauthorized_handler(e):
+        return e()
+
     @current_app.errorhandler(InternalServerErrorException)
     def internal_server_handler(e):
         return e()

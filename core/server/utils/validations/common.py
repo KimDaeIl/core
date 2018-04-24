@@ -1,6 +1,10 @@
 # Created validator.py by KimDaeil on 04/03/2018
 import functools
+
+from flask import request
+
 from core.server.apis.common.exceptions import *
+from core.server.utils.encryption import AESCipher
 
 
 def validator_decorator(*args, **kwargs):
@@ -26,6 +30,29 @@ def validator_decorator(*args, **kwargs):
             return func(*args, status="200", data=data)
 
         return validator
+
+    return validator_wrapper
+
+
+def session_validator():
+    def validator_wrapper(func):
+        @functools.wraps(func)
+        def check_session(*args, **kwargs):
+            session = request.headers.get("Authorization")
+
+            if session is None or len(session) == 0:
+                raise UnauthorizedException(attribute="default", details="default")
+
+            aes = AESCipher()
+            session_list = [data for data in aes.decrypt(session).split("_")]
+
+            if kwargs.get("user_id", 0) != session_list[0]:
+                raise UnauthorizedException(attribute="userId", details="bad_user_information")
+
+
+            return func(*args, **kwargs)
+
+        return check_session
 
     return validator_wrapper
 
