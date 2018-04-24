@@ -53,8 +53,9 @@ error = {
         "default": {
             "default": "접근 권한이 없습니다."
         },
-        "userId": {
-            "bad_user_information": "접근 정보가 잘못되었습니다."
+        "user_info": {
+            "default": "접근 정보가 잘못되었습니다.",
+            "id": "해당 세션이 유효하지 않습니다."
         }
     },
     "500": {

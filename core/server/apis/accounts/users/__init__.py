@@ -40,6 +40,8 @@ class Users(BaseResource):
             key=get_sign_up("required"),
             req=request
         )
+
+        print(result)
         return result
 
     def delete(self, *args, **kwargs):

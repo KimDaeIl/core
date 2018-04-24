@@ -10,6 +10,9 @@ class BaseResponse(Response):
 
     def __init__(self, data={}, status="200", mimetype="application/json"):
         response = ResponseData(status, request.method, request.url, data)
+
+        # TODO 2018. 04. 24. save log
+
         super(Response, self).__init__(response=json.dumps(response()), status=status,
                                        mimetype=mimetype)
 

@@ -32,14 +32,13 @@ class Sessions(db.Model):
         }
 
     def create_session(self):
-        result = {}
-        print(self.id)
-        if self.id != 0:
+        session = {}
+        if self.id and self.id > 0:
             db.session.add(self)
             db.session.commit()
-            result = self.to_json()
+            session = self.to_json()
 
-        return result
+        return session
 
     @classmethod
     def create_session_by_user(cls, user):
@@ -51,6 +50,7 @@ class Sessions(db.Model):
 
         session = cls()
         session.id = user.get("id", 0)
+        # add datetime.datetime.now() to validate salt
         session.salt = user.get("salt", "")
         session.session = generate_session(user.get("id"), request.remote_addr, user.salt)
         session.ip_address = request.remote_addr
@@ -62,6 +62,15 @@ class Sessions(db.Model):
     @classmethod
     def create_by_login(cls, uid, password):
         pass
+
+    @classmethod
+    def find_by_id(cls, user_id):
+        session = {}
+
+        if user_id and isinstance(user_id, int) and user_id > 0:
+            session = db.session.query(Sessions).filter(Sessions.id == user_id).first()
+
+        return session
 
 
 def generate_session(_id, ip_address, salt):

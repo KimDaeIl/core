@@ -3,6 +3,7 @@ import functools
 
 from flask import request
 
+from core.models.sessions import Sessions
 from core.server.apis.common.exceptions import *
 from core.server.utils.encryption import AESCipher
 
@@ -44,10 +45,28 @@ def session_validator():
                 raise UnauthorizedException(attribute="default", details="default")
 
             aes = AESCipher()
-            session_list = [data for data in aes.decrypt(session).split("_")]
+            session_list = aes.decrypt(session).split("_")
+            print(session_list)
 
-            if kwargs.get("user_id", 0) != session_list[0]:
-                raise UnauthorizedException(attribute="userId", details="bad_user_information")
+            if len(session_list) != 3:
+                raise UnauthorizedException(attribute="user_info", details="default")
+
+            try:
+                user_id = int(session_list[0])
+            except ValueError as e:
+                print(e)
+                raise UnauthorizedException(attribute="user_info", details="default")
+
+            # 1. check id
+            if kwargs.get("user_id", 0) != user_id:
+                raise UnauthorizedException(attribute="user_info", details="id")
+
+            # 2. find session
+            session = Sessions.find_by_id(user_id)
+
+            # 3. check ip address
+
+            # 4. check salt
 
 
             return func(*args, **kwargs)
