@@ -90,38 +90,6 @@ def session_validator():
                     raise UnauthorizedException(attribute="default", details="user_info")
                     break
 
-            # server_session_list = server_session.split("_")
-
-
-
-            # if len(server_session_list != 3):
-            #     raise UnauthorizedException(attribute="user_info", details="default")
-            #
-            ## 4-1. equal user id
-            # if server_session_list[0] != session_list[0]:
-            #     print("id가 다름")
-            #     print("raise 405")
-            #
-            ## 4-2. equal ip address
-            # if server_session_list[1] != session_list[1]:
-            #     print("접속한 디바이스가 다름 >> 다른 곳에서 로그인 함")
-            #     print("raise 405")
-            #
-            ## 4-3. equal salt
-            # server_salt = server_session_list[2]
-            # user_salt = session_list[1]
-            #
-            ##6-1. equal length
-            # if len(server_salt) != len(user_salt):
-            #     print("length is different")
-            #     print("raise 405")
-            #
-            ## 6-2. equal char of salts
-            # for s, u in zip(server_salt, user_salt):
-            #     if s != u:
-            #         print("salt is different")
-            #         print("raise 405")
-            #
             return func(*args, **kwargs)
 
         return check_session
