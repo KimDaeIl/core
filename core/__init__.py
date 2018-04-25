@@ -5,17 +5,26 @@ from core.server.apis.common.response import BaseResponse
 
 def before_first_request():
     from flask import current_app
-    from core.models import db
 
+    from core.models import db
+    from core.models.mongos import mongo_init_app
+
+    print("before_first_request")
     current_app.response_class = BaseResponse
 
+    print("before_first_request.db_init")
     db.init_app(current_app)
     db.create_all()
 
-    print("before_first_request")
+    # print("before_first_request.mongo_init")
+    mongo_init_app(current_app)
 
     @current_app.errorhandler(BadRequestException)
     def bed_request_handler(e):
+        return e()
+
+    @current_app.errorhandler(UnauthorizedException)
+    def unauthorized_handler(e):
         return e()
 
     @current_app.errorhandler(InternalServerErrorException)

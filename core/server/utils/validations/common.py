@@ -1,6 +1,12 @@
 # Created validator.py by KimDaeil on 04/03/2018
 import functools
+
+from flask import request
+
+from core.models.sessions import Sessions
+from core.models.mongos.sessions import SessionMongo
 from core.server.apis.common.exceptions import *
+from core.server.utils.encryption import AESCipher
 
 
 def validator_decorator(*args, **kwargs):
@@ -30,11 +36,94 @@ def validator_decorator(*args, **kwargs):
     return validator_wrapper
 
 
-def is_valid_length(data, min, max):
-    is_valid = False
+def session_validator():
+    def validator_wrapper(func):
+        @functools.wraps(func)
+        def check_session(*args, **kwargs):
+            session = request.headers.get("Authorization")
 
-    if isinstance(str, int):
-        data_len = len(data)
-        is_valid = True if min <= data_len and data_len <= max else False
+            # check session to valid
+            if session is None or len(session) == 0:
+                raise UnauthorizedException(attribute="default", details="default")
 
-    return is_valid
+            # parse to validate
+            session_list = AESCipher().decrypt(session).split("_")
+
+            # 1-1. length validation
+            if len(session_list) != 3:
+                raise UnauthorizedException(attribute="default", details="user_info")
+
+            # 1-2. first value of session_list is id for user
+            # parse string to int
+            try:
+                user_id = int(session_list[0])
+            except ValueError as e:
+                raise UnauthorizedException(attribute="default", details="user_info")
+
+            # 2. is id valid number?
+            if kwargs.get("user_id", 0) != user_id:
+                raise UnauthorizedException(attribute="default", details="user_info")
+
+            # 3. find session in NoSQL and parse to equal
+            sessions = SessionMongo.find_by_id(user_id)
+            print("server.utils.validations.server_session >>", sessions)
+            print("server.utils.validations.server_session >>", len(sessions))
+
+            # invalid session data
+            if len(sessions) == 0:
+                sessions = Sessions.find_by_id(user_id)
+
+                if sessions.get("id", 0) > 0:
+                    sessions = SessionMongo.create(sessions.to_json(has_salt=True))
+
+                else:
+                    raise UnauthorizedException(attribute="default", details="user_info")
+
+            # parse session data on sessions
+            server_session = sessions.get("session", "")
+
+            if len(server_session) != len(session):
+                raise UnauthorizedException(attribute="default", details="user_info")
+
+            for s, u in zip(server_session, session):
+                if s != u:
+                    raise UnauthorizedException(attribute="default", details="user_info")
+                    break
+
+            # server_session_list = server_session.split("_")
+
+
+
+            # if len(server_session_list != 3):
+            #     raise UnauthorizedException(attribute="user_info", details="default")
+            #
+            ## 4-1. equal user id
+            # if server_session_list[0] != session_list[0]:
+            #     print("id가 다름")
+            #     print("raise 405")
+            #
+            ## 4-2. equal ip address
+            # if server_session_list[1] != session_list[1]:
+            #     print("접속한 디바이스가 다름 >> 다른 곳에서 로그인 함")
+            #     print("raise 405")
+            #
+            ## 4-3. equal salt
+            # server_salt = server_session_list[2]
+            # user_salt = session_list[1]
+            #
+            ##6-1. equal length
+            # if len(server_salt) != len(user_salt):
+            #     print("length is different")
+            #     print("raise 405")
+            #
+            ## 6-2. equal char of salts
+            # for s, u in zip(server_salt, user_salt):
+            #     if s != u:
+            #         print("salt is different")
+            #         print("raise 405")
+            #
+            return func(*args, **kwargs)
+
+        return check_session
+
+    return validator_wrapper

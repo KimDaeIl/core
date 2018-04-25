@@ -49,9 +49,16 @@ error = {
         }
 
     },
+    "401": {
+        "default": {
+            "default": "접근 권한이 없습니다.",
+            "user_info": "해당 세션이 유효하지 않습니다."
+        }
+    },
     "500": {
-        "create": {
-            "user": "내부서버 오류로 실패했습니다 다시 시도 ㄱㄱ"
+        "default": {
+            "default": "내부서버 오류로 실패했습니다 다시 시도 ㄱㄱ",
+            "mongodb": "fail to init mongoDB"
         }
     }
 
