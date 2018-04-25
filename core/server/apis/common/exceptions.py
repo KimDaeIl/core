@@ -13,7 +13,6 @@ class DefaultException(Exception):
         self.status_code = code
         self.data = {}
 
-        print("dd")
         self.data["attribute"] = kwargs.get("attribute", "")
         self.data["details"] = error.get(self.status_code).get(self.data.get("attribute")).get(kwargs.get("details"))
 
@@ -25,35 +24,35 @@ class DefaultException(Exception):
 
 # 400
 class BadRequestException(DefaultException):
-    def __init__(self, attribute=None, details=None):
+    def __init__(self, attribute="default", details="default"):
         super(BadRequestException, self).__init__(code=400, attribute=attribute, details=details)
 
 
 # 401
 class UnauthorizedException(DefaultException):
-    def __init__(self, attribute=None, details="default"):
+    def __init__(self, attribute="default", details="default"):
         super(UnauthorizedException, self).__init__(code=401, attribute=attribute, details=details)
 
 
 # 404
 class NotFoundException(DefaultException):
-    def __init__(self, attribute=None, details="default"):
+    def __init__(self, attribute="default", details="default"):
         super(NotFoundException, self).__init__(code=404, attribute=attribute, details=details)
 
 
 # 405
 class MethodNotAllowedException(DefaultException):
-    def __init__(self, attribute=None, details="default"):
+    def __init__(self, attribute="default", details="default"):
         super(MethodNotAllowedException, self).__init__(code=405, attribute=attribute, details=details)
 
 
 # 408
 class RequestTimeoutException(DefaultException):
-    def __init__(self, attribute=None, details="default"):
+    def __init__(self, attribute="default", details="default"):
         super(RequestTimeoutException, self).__init__(code=408, attribute=attribute, details=details)
 
 
 # 500
 class InternalServerErrorException(DefaultException):
-    def __init__(self, attribute=None, details="default"):
+    def __init__(self, attribute="default", details="default"):
         super(InternalServerErrorException, self).__init__(code=500, attribute=attribute, details=details)

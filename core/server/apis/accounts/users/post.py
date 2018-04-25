@@ -1,10 +1,9 @@
 # Created users.post.py by KimDaeil on 03/31/2018
-from hashlib import sha3_256
-import base64
 from core.server.utils.validations.user import *
 from core.models.users import Users
 from core.models.sessions import Sessions
 from core.server.apis.common.exceptions import InternalServerErrorException
+from core.server.utils import make_salt
 
 
 # validate: check essential data to sign up
@@ -39,8 +38,8 @@ def create_user():
         user = Users()
         user.id = None
         user.uid = data.get("uid")
-        user.salt = base64.b64encode(sha3_256(str(datetime.now()).encode()).digest()).decode('utf-8')
-        user.password = sha3_256("{}{}".format(data.get("password"), user.salt).encode()).digest()
+        user.salt = make_salt(str(datetime.now()))
+        user.password = make_salt("{}{}".format(data.get("password"), user.salt))
         user.birth_year = data.get("birthYear")
         user.birth_month = data.get("birthMonth")
         user.birth_day = data.get("birthDay")
@@ -63,13 +62,13 @@ def create_session():
         #     TODO: 2018. 04. 20. raise ERROR
         # pass
 
-        session = Sessions.create_session_by_user(data.get("user", {}))
+        session = Sessions.create_by_user(data.get("user", {}))
 
         if session.id == 0:
             # TODO: 2018. 04. 20. raise error
             pass
 
-        data['user'].update({"session": session.create_session()})
+        data['user'].update({"session": session.create()})
         return data, "200"
 
     return _
