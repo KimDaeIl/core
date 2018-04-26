@@ -24,7 +24,9 @@ class Users(BaseResource):
         # api_creator.add(post.send_auth_mail())
         result = api_creator.run(
             key=user_meta["signUp"]["required"],
-            req=request)
+            req=request,
+            **kwargs
+        )
 
         return result
 
@@ -32,7 +34,8 @@ class Users(BaseResource):
         api_creator = ApiCreator()
         result = api_creator.run(
             key=user_meta["signUp"]["required"],
-            req=request)
+            req=request
+        )
 
         return result
 
@@ -40,10 +43,11 @@ class Users(BaseResource):
     def put(self, *args, **kwargs):
         api_creator = ApiCreator()
         api_creator.add(put.validate())
-        api_creator.add(put.)
+        api_creator.add(put.update_user())
         result = api_creator.run(
             key=user_meta["update"]["required"],
-            req=request
+            req=request,
+            **kwargs
         )
 
         print(result)

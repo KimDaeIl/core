@@ -8,8 +8,8 @@ user_meta = {
         "nullable": []
     },
     "update": {
-        "all": ["password", "birthYear", "birthMonth", "birthDay"],
-        "required": [],
+        "all": ["password", "birthYear", "birthMonth", "birthDay", "user_id"],
+        "required": ["user_id"],
         "nullable": []
     },
     "email": {
