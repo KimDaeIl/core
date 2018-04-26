@@ -12,7 +12,8 @@ error = {
         "uncaught": "잘못된 요청입니다",
         "uid": {
             "default": "email이 없는 데예?",
-            "format": "이메일 형식이 맞지 않습니다."
+            "format": "이메일 형식이 맞지 않습니다.",
+            "notNullable": "이메일은 초기화할 수 없습니다."
         },
         "password": {
             "default": "비밀번호가 없는데예?",
@@ -24,25 +25,30 @@ error = {
                                                         user_meta.get("password").get("maxLength")),
             "special": "허용되는 특수 문자는 [{0}] 입니다".format(
                 ", ".join(user_meta.get("password").get("special").get("enum").replace("\\", ""))),
-            "upper": "대문자 최소 {0}자는 포함되어야 합니다."
+            "upper": "대문자 최소 {0}자는 포함되어야 합니다.",
+            "notNullable": "비밀번호은 초기화할 수 없습니다."
         },
         "birthYear": {
             "default": "생년이 없는데예?",
-            "outOfRange": "잘못된 연도입니다."
+            "outOfRange": "잘못된 연도입니다.",
+            "notNullable": "생년은 초기화할 수 없습니다."
         },
         "birthMonth": {
             "default": "생월이 없는데예?",
             "outOfRange": "잘못된 월 입니다.",
-            "outOfNow": "이번 달보다 미래네요?"
+            "outOfNow": "이번 달보다 미래네요?",
+            "notNullable": "생월은 초기화할 수 없습니다."
         },
         "birthDay": {
             "default": "생일이 없는데예?",
             "outOfRangeMonth": "입력한 월과 일의 정보를 확인해주세요.",
-            "oufOfNow": "오늘보다 미래네요."
+            "oufOfNow": "오늘보다 미래네요.",
+            "notNullable": "생일은 초기화할 수 없습니다."
         },
         "gender": {
             "default": "성별이 없는데예?",
-            "format": "입력된 성별 정보를 확인해주세요."
+            "format": "입력된 성별 정보를 확인해주세요.",
+            "notNullable": "성별은 초기화할 수 없습니다."
         },
         "typeError": {
             "int": "숫자만 입력할 수 있습니다."

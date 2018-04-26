@@ -1,16 +1,16 @@
 # Created users.post.py by KimDaeil on 03/31/2018
+
+
+from . import InternalServerErrorException
 from core.server.utils.validations.user import *
 from core.models.users import Users
 from core.models.sessions import Sessions
-from core.server.apis.common.exceptions import InternalServerErrorException
 from core.server.utils import make_salt
 
 
 # validate: check essential data to sign up
 def validate():
     def _(data):
-        status = "200"
-
         #  uid
         validate_uid(data.get("uid"))
 
@@ -18,7 +18,9 @@ def validate():
         validate_password(data.get("password"))
 
         # birth_date
-        validate_birth_date(data.get("birthYear"), data.get("birthMonth"), data.get("birthDay"))
+        data["birthYear"], data["birthMonth"], data["birthDay"] = validate_birth_date(data.get("birthYear"),
+                                                                                      data.get("birthMonth"),
+                                                                                      data.get("birthDay"))
 
         # birthMonth
         validate_gender(data.get("gender"))

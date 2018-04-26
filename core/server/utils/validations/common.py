@@ -18,10 +18,15 @@ def validator_decorator(*args, **kwargs):
             will need to handle resettable data if it added like state message etc.
             """
 
-            req = kwargs.get("req")
+            data = request.form.to_dict()
+            data.update(request.args.to_dict())
 
-            data = req.form.to_dict()
-            data.update(req.args.to_dict())
+            print(request)
+            print(request.url)
+            print(request.form.to_dict())
+            print(request.args.to_dict())
+            print(request.endpoint)
+            print(data)
 
             need_keys = kwargs.get("key")
             for k in need_keys:
@@ -40,7 +45,14 @@ def session_validator():
     def validator_wrapper(func):
         @functools.wraps(func)
         def check_session(*args, **kwargs):
+
             session = request.headers.get("Authorization")
+
+            print("session_validator.request.**kwargs >> ", kwargs)
+            print("session_validator.request.args >> ", request.args)
+            print("session_validator.request.form >> ", request.form)
+            print("session_validator.request.endpoint >> ", request.endpoint)
+            print("session_validator.request.json >> ", request.json)
 
             # check session to valid
             if session is None or len(session) == 0:
@@ -67,7 +79,6 @@ def session_validator():
             # 3. find session in NoSQL and parse to equal
             sessions = SessionMongo.find_by_id(user_id)
             print("server.utils.validations.server_session >>", sessions)
-            print("server.utils.validations.server_session >>", len(sessions))
 
             # invalid session data
             if len(sessions) == 0:
