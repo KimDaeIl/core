@@ -9,5 +9,5 @@ __all__ = ["users_blue_print"]
 users_blue_print = Blueprint("users", __name__, url_prefix="/users")
 api = Api(users_blue_print)
 
-api.add_resource(Users, "", "user")
-api.add_resource(Users, "/<int:user_id>", endpoint="user_put")
+api.add_resource(Users, '', 'user')
+api.add_resource(Users, '/<int:user_id>', endpoint='user_with_id')

@@ -5,7 +5,12 @@ user_meta = {
     "signUp": {
         "all": ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
         "required": ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
-        "optional": []
+        "nullable": []
+    },
+    "update": {
+        "all": ["password", "birthYear", "birthMonth", "birthDay", "user_id"],
+        "required": ["user_id"],
+        "nullable": []
     },
     "email": {
         "minLength": 10,
@@ -39,7 +44,7 @@ user_meta = {
 }
 
 
-def get_sign_up(code):
-    return user_meta.get("signUp").get(code) \
-        if code and code in user_meta.get("signUp").keys() \
-        else user_meta.get("signUp")
+# def get_sign_up(code):
+#     return user_meta.get("signUp").get(code) \
+#         if code and code in user_meta.get("signUp").keys() \
+#         else user_meta.get("signUp")

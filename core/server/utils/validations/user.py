@@ -22,6 +22,7 @@ def validate_uid(uid):
 
 
 def validate_password(password):
+    print("server.utils.validations.validate_password >> ", "password")
     password_meta = user_meta.get("password")
 
     if not isinstance(password, str):
@@ -42,12 +43,17 @@ def validate_password(password):
 
 
 def validate_birth_date(year, month, day):
+    print("server.utils.validations.validate_birth_date >> ")
     year = validate_birth_year(year)
     month = validate_birth_month(year, month)
-    validate_birth_day(year, month, day)
+    day = validate_birth_day(year, month, day)
+
+    return year, month, day
 
 
 def validate_birth_year(year):
+    print("server.utils.validations.validate_birth_year >> ", year)
+
     year_meta = user_meta.get("birthYear")
 
     if not isinstance(year, int):
@@ -63,6 +69,8 @@ def validate_birth_year(year):
 
 
 def validate_birth_month(year, month):
+    print("server.utils.validations.validate_birth_month >> ", year, month)
+
     month_meta = user_meta.get("birthMonth")
 
     if not isinstance(month, int):
@@ -82,6 +90,7 @@ def validate_birth_month(year, month):
 
 
 def validate_birth_day(year, month, day):
+    print("server.utils.validations.validate_birth_day >> ", year, month, day)
     if not isinstance(day, int):
         try:
             day = int(day)
@@ -90,7 +99,7 @@ def validate_birth_day(year, month, day):
 
     import calendar
 
-    last_day = calendar.monthrange(year, month)[1]
+    last_day = calendar.monthrange(int(year), int(month))[1]
     if 1 > day > last_day:
         raise BadRequestException("birthYear", "outOfRangeMonth")
 
@@ -98,6 +107,8 @@ def validate_birth_day(year, month, day):
     today = now.day
     if now.year == year and now.month == month and day < today:
         raise BadRequestException("birthDay", "oufOfNow")
+
+    return day
 
 
 def validate_gender(gender):
