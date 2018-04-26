@@ -1,11 +1,11 @@
 # Created users.post.py by KimDaeil on 03/31/2018
 
 
-from . import InternalServerErrorException
 from core.server.utils.validations.user import *
-from core.models.users import Users
+from . import InternalServerErrorException
+from core.models.users import Users, generate_password
 from core.models.sessions import Sessions
-from core.server.utils import make_salt
+from core.server.utils import make_hashed
 
 
 # validate: check essential data to sign up
@@ -40,8 +40,8 @@ def create_user():
         user = Users()
         user.id = None
         user.uid = data.get("uid")
-        user.salt = make_salt(str(datetime.now()))
-        user.password = make_salt("{}{}".format(data.get("password"), user.salt))
+        user.salt = make_hashed(datetime.now())
+        user.password = make_hashed("{}{}".format(data.get("password"), user.salt))
         user.birth_year = data.get("birthYear")
         user.birth_month = data.get("birthMonth")
         user.birth_day = data.get("birthDay")

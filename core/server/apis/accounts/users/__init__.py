@@ -12,7 +12,7 @@ from core.server.apis.common.exceptions import *
 
 from . import post, put
 
-__all__ = ["Users", ""]
+__all__ = ["Users"]
 
 
 class Users(BaseResource):

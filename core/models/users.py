@@ -42,3 +42,19 @@ class Users(db.Model):
             result = self.to_json()
 
         return result
+
+    @classmethod
+    def find_by_id(cls, user_id):
+        user = cls()
+        if user_id and isinstance(user_id, int):
+            temp_user = db.session.query(cls).filter(cls.id == user_id).first()
+
+            if temp_user:
+                user = temp_user
+
+        return user
+
+def generate_password():
+    password = ""
+
+    return password

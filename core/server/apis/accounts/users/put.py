@@ -2,6 +2,7 @@
 
 
 from core.server.utils.validations.user import *
+from . import NotFoundException, InternalServerErrorException
 from core.models.users import Users
 from . import user_meta
 
@@ -37,10 +38,11 @@ def validate():
 
                 else:
                     # validation
-                    data_value = function_dict.get(key)(data_value)
+                    valid_data = function_dict.get(key)(data_value)
+                    data_value = valid_data if valid_data else data_value
 
                 result[key] = data_value
-
+        print("user.put.validate.result >> ", result)
         return result, "200"
 
     return _
@@ -49,6 +51,21 @@ def validate():
 def update_user():
     def _(data):
         result = {}
+
+        print("user.put.update_user.data >> ", data)
+        user = Users.find_by_id(data.get("user_id", 0))
+
+        if not user:
+            raise NotFoundException(attribute="user", details="id")
+
+        for key in data.keys():
+            setattr(user, key, data[key])
+
+        print("update_user >> ", user.to_json())
+        # result = user.create_user()
+        #
+        # if "id" not in result:
+        #     raise InternalServerErrorException(attribute="default", details="default")
 
         return result, "200"
 

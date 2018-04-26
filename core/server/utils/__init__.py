@@ -7,7 +7,7 @@ from hashlib import sha3_256
 __all__ = ["ApiCreator", "validator"]
 
 
-def make_salt(data):
+def make_hashed(data):
     if data:
         if not isinstance(data, str):
             data = str(data)

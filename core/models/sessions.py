@@ -54,7 +54,7 @@ class Sessions(db.Model):
 
     @classmethod
     def create_by_user(cls, user):
-        from core.server.utils import make_salt
+        from core.server.utils import make_hashed
         if user is None or "id" not in user:
             # TODO: 2018. 04. 20. raise error
             pass
@@ -63,7 +63,7 @@ class Sessions(db.Model):
 
         session = cls()
         session.id = user.get("id", 0)
-        session.salt = make_salt("{}{}".format(user.get("salt", ""), datetime.now()))
+        session.salt = make_hashed("{}{}".format(user.get("salt", ""), datetime.now()))
         session.session = generate_session(user.get("id"), request.remote_addr, session.salt)
         session.ip_address = request.remote_addr
         session.platform = user_agent.platform if user_agent.platform else ""
