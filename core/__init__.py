@@ -19,14 +19,22 @@ def before_first_request():
     # print("before_first_request.mongo_init")
     mongo_init_app(current_app)
 
+    # 400
     @current_app.errorhandler(BadRequestException)
     def bed_request_handler(e):
         return e()
 
+    # 401
     @current_app.errorhandler(UnauthorizedException)
     def unauthorized_handler(e):
         return e()
 
+    # 405
+    @current_app.errorhandler(MethodNotAllowedException)
+    def method_not_allowed_handler(e):
+        return e()
+
+    # 500
     @current_app.errorhandler(InternalServerErrorException)
     def internal_server_handler(e):
         return e()

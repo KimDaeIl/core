@@ -32,13 +32,7 @@ class Users(BaseResource):
         return result
 
     def get(self, *args, **kwargs):
-        api_creator = ApiCreator()
-        result = api_creator.run(
-            key=user_meta["signUp"]["required"],
-            req=request
-        )
-
-        return result
+        raise MethodNotAllowedException(attribute="user", details="get")
 
     @session_validator()
     def put(self, *args, **kwargs):
