@@ -6,7 +6,8 @@ from flask import request
 
 from core.models import *
 from core.models.mongos.sessions import SessionMongo
-from core.server.utils.encryption import AESCipher
+from core.server.utils.security import AESCipher
+from core.server.utils.security import make_hashed
 
 
 class Sessions(db.Model):
@@ -23,7 +24,7 @@ class Sessions(db.Model):
 
     def to_json(self, has_salt=False):
         json = {
-            "id": self.id,
+            # "id": self.id,
             "session": self.session,
             "ipAddress": self.ip_address if self.ip_address else "",
             "platform": self.platform if self.platform else "",
@@ -50,11 +51,13 @@ class Sessions(db.Model):
                 if "salt" in session:
                     del session["salt"]
 
+                if "_id" in session:
+                    del session["_id"]
+
         return session
 
     @classmethod
     def create_by_user(cls, user):
-        from core.server.utils import make_hashed
         if user is None or "id" not in user:
             # TODO: 2018. 04. 20. raise error
             pass

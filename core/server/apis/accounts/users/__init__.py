@@ -7,6 +7,7 @@ from flask import request
 from core.server.utils.api_creator import ApiCreator
 from core.server.apis.common import BaseResource
 from core.server.meta.common import user_meta
+from core.models.users import Users
 from core.server.utils.validations.common import session_validator
 from core.server.apis.common.exceptions import *
 

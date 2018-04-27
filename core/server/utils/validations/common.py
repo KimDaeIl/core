@@ -6,7 +6,7 @@ from flask import request
 from core.models.sessions import Sessions
 from core.models.mongos.sessions import SessionMongo
 from core.server.apis.common.exceptions import *
-from core.server.utils.encryption import AESCipher
+from core.server.utils.security import AESCipher
 
 
 def validator_decorator(*args, **kwargs):

@@ -4,18 +4,18 @@
 from core.server.utils.validations.user import *
 from . import NotFoundException, InternalServerErrorException
 from core.models.users import Users
+from core.server.utils.security import make_hashed, generate_password
 from . import user_meta
 
 
 def validate():
     def _(data):
-        data_value = None
         result = {}
         keys_all = user_meta.get("update").get("all")
         nullables = user_meta.get("update").get("nullable")
 
         print("user.put.validate.data >> ", data)
-        function_dict = {
+        validation_functions = {
             "password": lambda v: validate_password(v),
             "birthYear": lambda v: validate_birth_year(v),
             "birthMonth": lambda v: validate_birth_month(result["birthYear"], v),
@@ -38,10 +38,10 @@ def validate():
 
                 else:
                     # validation
-                    valid_data = function_dict.get(key)(data_value)
-                    data_value = valid_data if valid_data else data_value
+                    data_value = validation_functions.get(key)(data_value)
 
                 result[key] = data_value
+
         print("user.put.validate.result >> ", result)
         return result, "200"
 
@@ -53,16 +53,27 @@ def update_user():
         result = {}
 
         print("user.put.update_user.data >> ", data)
+        print("user.put.update_user.password >> ", AESCipher().encrypt(data.get("password")))
         user = Users.find_by_id(data.get("user_id", 0))
 
         if not user:
             raise NotFoundException(attribute="user", details="id")
 
-        for key in data.keys():
-            setattr(user, key, data[key])
+        if "password" in data:
+            user.salt = make_hashed(datetime.now())
+            user.password = data["password"]
 
-        print("update_user >> ", user.to_json())
-        # result = user.create_user()
+            generate_password(user)
+
+        if "birthYear" in data:
+            user.birth_year = data["birthYear"]
+
+        if "birthMonth" in data:
+            user.birth_month = data["birthMonth"]
+
+        if "birthDay" in data:
+            user.birth_day = data["birthDay"]
+        result["user"] = user.create_user()
         #
         # if "id" not in result:
         #     raise InternalServerErrorException(attribute="default", details="default")

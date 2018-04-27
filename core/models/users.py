@@ -19,6 +19,7 @@ class Users(db.Model):
 
     def to_json(self):
         print("models.Users.datetime >> ", self.created_at)
+        print("models.Users.password >> ", self.password)
         user = {
             "id": self.id,
             "uid": self.uid,
@@ -29,7 +30,8 @@ class Users(db.Model):
             "createdAt": self.created_at.isoformat()
         }
 
-        user.update({"session": self.session.to_json() if self.session else {}})
+        if self.session:
+            user.update({"session": self.session.to_json()})
 
         return user
 
@@ -53,8 +55,3 @@ class Users(db.Model):
                 user = temp_user
 
         return user
-
-def generate_password():
-    password = ""
-
-    return password

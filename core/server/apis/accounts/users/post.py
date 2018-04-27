@@ -3,29 +3,31 @@
 
 from core.server.utils.validations.user import *
 from . import InternalServerErrorException
-from core.models.users import Users, generate_password
 from core.models.sessions import Sessions
-from core.server.utils import make_hashed
+from core.server.utils.security import make_hashed, generate_password
 
 
 # validate: check essential data to sign up
 def validate():
     def _(data):
+        data_value = None
+        result = {}
+
         #  uid
-        validate_uid(data.get("uid"))
+        result["uid"] = validate_uid(data.get("uid"))
 
         # password
-        validate_password(data.get("password"))
+        result["password"] = validate_password(data.get("password"))
 
         # birth_date
-        data["birthYear"], data["birthMonth"], data["birthDay"] = validate_birth_date(data.get("birthYear"),
-                                                                                      data.get("birthMonth"),
-                                                                                      data.get("birthDay"))
+        result["birthYear"], result["birthMonth"], result["birthDay"] = validate_birth_date(data.get("birthYear"),
+                                                                                            data.get("birthMonth"),
+                                                                                            data.get("birthDay"))
 
-        # birthMonth
-        validate_gender(data.get("gender"))
+        # gender
+        result["gender"] = validate_gender(data.get("gender"))
 
-        return data, "200"
+        return result, "200"
 
     return _
 
@@ -41,15 +43,19 @@ def create_user():
         user.id = None
         user.uid = data.get("uid")
         user.salt = make_hashed(datetime.now())
-        user.password = make_hashed("{}{}".format(data.get("password"), user.salt))
+        user.password = data.get("password")
         user.birth_year = data.get("birthYear")
         user.birth_month = data.get("birthMonth")
         user.birth_day = data.get("birthDay")
         user.gender = data.get("gender")
 
+        print("create_user.password >>", user.password)
+        generate_password(user)
+        print("create_user.password >>", user.password)
+
         result["user"] = user.create_user()
 
-        if result.get("id") == 0:
+        if result["user"].get("id",0) == 0:
             raise InternalServerErrorException(attribute="create", details="user")
 
         return result, "200"

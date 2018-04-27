@@ -10,7 +10,7 @@ class SessionMongo:
 
         if session and isinstance(session, dict):
             if "id" in session:
-                print("mongos.SessionMongo.post >> ", mongo.db.session.insert(session))
+                print("mongos.SessionMongo.create >> ", mongo.db.session.insert(session))
 
         return session
 
