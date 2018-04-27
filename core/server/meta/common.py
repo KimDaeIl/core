@@ -2,13 +2,18 @@
 import datetime
 
 user_meta = {
-    "signUp": {
+    "post": {
         "all": ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
         "required": ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
         "nullable": []
     },
     "update": {
         "all": ["password", "birthYear", "birthMonth", "birthDay", "user_id"],
+        "required": ["user_id"],
+        "nullable": []
+    },
+    "delete": {
+        "all": ["user_id"],
         "required": ["user_id"],
         "nullable": []
     },

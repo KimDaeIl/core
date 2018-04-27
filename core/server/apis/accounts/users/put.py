@@ -3,7 +3,7 @@
 
 from core.server.utils.validations.user import *
 from . import NotFoundException, InternalServerErrorException
-from core.models.users import Users
+from core.models.users import UserModel
 from core.server.utils.security import make_hashed, generate_password
 from . import user_meta
 
@@ -54,7 +54,7 @@ def update_user():
 
         print("user.put.update_user.data >> ", data)
         print("user.put.update_user.password >> ", AESCipher().encrypt(data.get("password")))
-        user = Users.find_by_id(data.get("user_id", 0))
+        user = UserModel.find_by_id(data.get("user_id", 0))
 
         if not user:
             raise NotFoundException(attribute="user", details="id")

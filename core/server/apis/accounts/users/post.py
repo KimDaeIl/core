@@ -1,9 +1,9 @@
 # Created users.post.py by KimDaeil on 03/31/2018
 
-
 from core.server.utils.validations.user import *
 from . import InternalServerErrorException
-from core.models.sessions import Sessions
+from . import UserModel
+from core.models.sessions import SessionModel
 from core.server.utils.security import make_hashed, generate_password
 
 
@@ -39,7 +39,7 @@ def create_user():
     def _(data):
         result = {}
 
-        user = Users()
+        user = UserModel()
         user.id = None
         user.uid = data.get("uid")
         user.salt = make_hashed(datetime.now())
@@ -55,7 +55,7 @@ def create_user():
 
         result["user"] = user.create_user()
 
-        if result["user"].get("id",0) == 0:
+        if result["user"].get("id", 0) == 0:
             raise InternalServerErrorException(attribute="create", details="user")
 
         return result, "200"
@@ -70,13 +70,10 @@ def create_session():
         #     TODO: 2018. 04. 20. raise ERROR
         # pass
 
-        session = Sessions.create_by_user(data.get("user", {}))
+        session = SessionModel.create_by_user(data.get("user", {}))
 
-        if session.id == 0:
-            # TODO: 2018. 04. 20. raise error
-            pass
+        data["user"].update({"session": session})
 
-        data['user'].update({"session": session.create()})
         return data, "200"
 
     return _

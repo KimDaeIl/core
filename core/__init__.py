@@ -29,6 +29,11 @@ def before_first_request():
     def unauthorized_handler(e):
         return e()
 
+    # 404
+    @current_app.errorhandler(NotFoundException)
+    def not_found_handler(e):
+        return e()
+
     # 405
     @current_app.errorhandler(MethodNotAllowedException)
     def method_not_allowed_handler(e):

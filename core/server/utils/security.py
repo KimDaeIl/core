@@ -2,7 +2,7 @@
 
 from base64 import b64encode, b64decode
 from hashlib import sha3_256
-from core.models.users import Users
+from core.models.users import UserModel
 from datetime import datetime
 from Crypto import Random
 from Crypto.Cipher import AES
@@ -52,5 +52,5 @@ def make_hashed(data):
 
 
 def generate_password(user):
-    if user and isinstance(user, Users):
+    if user and isinstance(user, UserModel):
         user.password = make_hashed("{}{}{}".format(user.password, user.salt, datetime.now()))

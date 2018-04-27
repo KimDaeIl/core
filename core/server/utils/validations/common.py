@@ -3,7 +3,7 @@ import functools
 
 from flask import request
 
-from core.models.sessions import Sessions
+from core.models.sessions import SessionModel
 from core.models.mongos.sessions import SessionMongo
 from core.server.apis.common.exceptions import *
 from core.server.utils.security import AESCipher
@@ -78,10 +78,10 @@ def session_validator():
 
             # invalid session data
             if len(sessions) == 0:
-                sessions = Sessions.find_by_id(user_id)
+                sessions = SessionModel.find_by_id(user_id)
 
-                if sessions.get("id", 0) > 0:
-                    sessions = SessionMongo.create(sessions.to_json(has_salt=True))
+                if sessions.id != 0:
+                    sessions = SessionMongo.create_session(sessions.to_json(has_salt=True))
 
                 else:
                     raise UnauthorizedException(attribute="default", details="user_info")

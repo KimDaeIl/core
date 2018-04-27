@@ -7,24 +7,24 @@ from flask import request
 from core.server.utils.api_creator import ApiCreator
 from core.server.apis.common import BaseResource
 from core.server.meta.common import user_meta
-from core.models.users import Users
+from core.models.users import UserModel
 from core.server.utils.validations.common import session_validator
 from core.server.apis.common.exceptions import *
 
-from . import post, put
+from . import post, put, delete
 
-__all__ = ["Users"]
+__all__ = ["UserModel"]
 
 
 class Users(BaseResource):
     def post(self, *args, **kwargs):
-        api_creator = ApiCreator()
-        api_creator.add(post.validate())
-        api_creator.add(post.create_user())
-        api_creator.add(post.create_session())
-        # api_creator.add(post.send_auth_mail())
-        result = api_creator.run(
-            key=user_meta["signUp"]["required"],
+        creator = ApiCreator()
+        creator.add(post.validate())
+        creator.add(post.create_user())
+        creator.add(post.create_session())
+        # creator.add(post.send_auth_mail())
+        result = creator.run(
+            key=user_meta["post"]["required"],
             req=request,
             **kwargs
         )
@@ -36,10 +36,10 @@ class Users(BaseResource):
 
     @session_validator()
     def put(self, *args, **kwargs):
-        api_creator = ApiCreator()
-        api_creator.add(put.validate())
-        api_creator.add(put.update_user())
-        result = api_creator.run(
+        creator = ApiCreator()
+        creator.add(put.validate())
+        creator.add(put.update_user())
+        result = creator.run(
             key=user_meta["update"]["required"],
             req=request,
             **kwargs
@@ -48,5 +48,13 @@ class Users(BaseResource):
         print(result)
         return result
 
+    @session_validator()
     def delete(self, *args, **kwargs):
-        return {"Users": "get"}
+        creator = ApiCreator()
+        creator.add(delete.validate())
+        creator.add(delete.delete_user())
+        result = creator.run(
+            key=user_meta["delete"]["required"],
+            req=request,
+            **kwargs)
+        return result

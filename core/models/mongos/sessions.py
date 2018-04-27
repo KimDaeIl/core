@@ -6,13 +6,19 @@ from datetime import datetime
 
 class SessionMongo:
     @classmethod
-    def create(cls, session):
+    def create_session(cls, session):
 
         if session and isinstance(session, dict):
-            if "id" in session:
-                print("mongos.SessionMongo.create >> ", mongo.db.session.insert(session))
+            if "id" in session and isinstance(session["id"], int):
+                print("mongos.SessionMongo.create >> ", mongo.db.session.insert_one(session))
 
         return session
+
+    @classmethod
+    def delete_session(cls, session):
+        if session and isinstance(session, dict):
+            if "id" in session and isinstance(session["id"], int):
+                print("mongos.SessionMongo.delete >> ", mongo.db.session.delete_one(session))
 
     @classmethod
     def find_by_id(cls, user_id):

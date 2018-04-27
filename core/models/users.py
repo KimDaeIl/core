@@ -2,7 +2,7 @@
 from core.models import *
 
 
-class Users(db.Model):
+class UserModel(db.Model):
     __tablename__ = "USERS"
 
     id = db.Column("id", db.BigInteger, primary_key=True, index=True, autoincrement=True)
@@ -16,6 +16,9 @@ class Users(db.Model):
     created_at = DateTime("created_at")
 
     session = None
+
+    def __init__(self):
+        self.id = 0
 
     def to_json(self):
         print("models.Users.datetime >> ", self.created_at)
@@ -40,6 +43,16 @@ class Users(db.Model):
 
         if self.id != 0:
             db.session.add(self)
+            db.session.commit()
+            result = self.to_json()
+
+        return result
+
+    def delete_user(self):
+        result = {}
+
+        if self.id != 0:
+            db.session.delete(self)
             db.session.commit()
             result = self.to_json()
 

@@ -2,7 +2,6 @@
 import re
 from datetime import datetime
 
-from core.models.users import Users
 from core.server.meta.common import user_meta
 from core.server.apis.common.exceptions import BadRequestException, InternalServerErrorException
 from core.server.utils.security import AESCipher

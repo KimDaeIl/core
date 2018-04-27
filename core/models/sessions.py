@@ -10,7 +10,7 @@ from core.server.utils.security import AESCipher
 from core.server.utils.security import make_hashed
 
 
-class Sessions(db.Model):
+class SessionModel(db.Model):
     __tablename__ = "SESSIONS"
 
     id = BigInt("id", primary_key=True, index=True)
@@ -21,6 +21,9 @@ class Sessions(db.Model):
     ##
     salt = String("salt", 126)
     created_at = DateTime("created_at")
+
+    def __init__(self):
+        self.id = 0
 
     def to_json(self, has_salt=False):
         json = {
@@ -33,6 +36,7 @@ class Sessions(db.Model):
         }
 
         if has_salt:
+            json["id"] = self.id
             json["salt"] = self.salt
 
         return json
@@ -43,16 +47,27 @@ class Sessions(db.Model):
             db.session.add(self)
             db.session.commit()
 
-            if self.id > 0:
-                session = self.to_json(True)
+            session = self.to_json(True)
 
-                SessionMongo.create(session)
+            SessionMongo.create_session(session)
 
-                if "salt" in session:
-                    del session["salt"]
+            if "salt" in session:
+                del session["salt"]
 
-                if "_id" in session:
-                    del session["_id"]
+            if "_id" in session:
+                del session["_id"]
+
+        return session
+
+    def delete_session(self):
+        session = {}
+        if self.id != 0:
+            db.session.delete(self)
+            db.session.commit()
+
+            session = self.to_json(True)
+
+            SessionMongo.delete_session(session)
 
         return session
 
@@ -72,16 +87,19 @@ class Sessions(db.Model):
         session.platform = user_agent.platform if user_agent.platform else ""
         session.platform_version = user_agent.version if user_agent.version else ""
 
-        return session
+        return session.create()
 
     @classmethod
     def find_by_id(cls, user_id):
-        session = None
+        session = cls()
 
         if user_id and isinstance(user_id, int) and user_id > 0:
-            session = db.session.query(Sessions).filter(Sessions.id == user_id).first()
+            temp_session = db.session.query(SessionModel).filter(SessionModel.id == user_id).first()
 
-        return session if session else Sessions
+            if temp_session:
+                session = temp_session
+
+        return session
 
 
 def generate_session(_id, ip_address, salt):
