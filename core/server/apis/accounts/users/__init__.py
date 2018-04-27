@@ -1,6 +1,6 @@
 # Created users.__init__.py by KimDaeil on 03/31/2018
 
-from . import *
+# from . import *
 
 from flask import request
 
