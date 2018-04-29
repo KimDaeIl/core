@@ -20,6 +20,7 @@ class SessionModel(db.Model):
     platform_version = String("platform_version", 64)
     ##
     salt = String("salt", 126)
+    updated_at = DateTime("updated_at")
     created_at = DateTime("created_at")
 
     def __init__(self):
@@ -54,15 +55,6 @@ class SessionModel(db.Model):
     def update_session(self, user):
         self.salt = make_salt(user.get("salt", ""))
         self.session = generate_session(user.get("id"), request.remote_addr, self.salt)
-
-    # def save(self):
-    #     session = {}
-    #     if self.id and self.id > 0:
-    #         db.session.commit()
-    #
-    #         session = self.insert_or_update_in_mongo()
-    #
-    #     return session
 
     def insert_or_update_in_mongo(self):
         session = self.to_json(True)
