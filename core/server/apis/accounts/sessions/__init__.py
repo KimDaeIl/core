@@ -31,7 +31,22 @@ class Sessions(BaseResource):
         return current_app.response_class(data={"session": "get"})
 
     def put(self, *args, **kwargs):
-        return current_app.response_class(data={"session": "put"})
+        creator = ApiCreator()
+        creator.add(put.validate())
+        creator.add(put.find_user())
+        result = creator.run(
+            key=[],
+            req=request,
+            **kwargs
+        )
+        return result
 
     def delete(self, *args, **kwargs):
+        creator = ApiCreator()
+        creator.add(delete.validate())
+        result = creator.run(
+            key=[],
+            req=request,
+            **kwargs
+        )
         return current_app.response_class(data={"session": "delete"})
