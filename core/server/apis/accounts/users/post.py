@@ -10,8 +10,11 @@ from core.server.utils.security import make_hashed, generate_password
 # validate: check essential data to sign up
 def validate():
     def _(data):
-        data_value = None
         result = {}
+        data_value = None
+
+        keys_all = ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
+        nullables = []
 
         #  uid
         result["uid"] = validate_uid(data.get("uid"))

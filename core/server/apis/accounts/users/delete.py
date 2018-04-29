@@ -1,5 +1,4 @@
 # Created users.delete.py by KimDaeil on 03/31/2018
-from . import user_meta
 from . import UnauthorizedException, NotFoundException
 from . import UserModel
 from core.models.sessions import SessionModel
@@ -8,14 +7,17 @@ from core.models.sessions import SessionModel
 def validate():
     def _(data):
         result = {}
-        keys_all = user_meta["delete"]["all"]
+
+        keys_all = ["user_id"]
+        nullables = []
+
         validate_functions = {
             "user_id": lambda v: v if v and isinstance(v, int) else 0
         }
 
-        for key in keys_all:
-            if key in data and key in validate_functions:
-                result[key] = validate_functions.get(key)(data[key])
+        for k in keys_all:
+            if k in data and k in validate_functions:
+                result[k] = validate_functions.get(k)(data[k])
 
         return result, "200"
 

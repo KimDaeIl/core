@@ -4,7 +4,6 @@ from flask import request, current_app
 
 from core.server.apis.common import BaseResource
 from core.server.utils.api_creator import ApiCreator
-from core.server.meta.common import user_meta
 
 from core.models.sessions import SessionModel
 from core.models.sessions import SessionMongo
@@ -15,6 +14,12 @@ from . import post, get, put, delete
 
 class Sessions(BaseResource):
     def post(self, *args, **kwargs):
+        creator = ApiCreator()
+        creator.run(
+            key=["uid", "password"],
+            req=request,
+            **kwargs
+        )
         return current_app.response_class(data={"session": "post"})
 
     def get(self, *args, **kwargs):
