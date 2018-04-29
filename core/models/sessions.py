@@ -33,6 +33,7 @@ class SessionModel(db.Model):
             "ipAddress": self.ip_address if self.ip_address else "",
             "platform": self.platform if self.platform else "",
             "platform_version": self.platform_version if self.platform_version else "",
+            "updated_at": self.updated_at.isoformat() if self.updated_at else "",
             "createdAt": self.created_at.isoformat() if self.created_at else ""
         }
 
