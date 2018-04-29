@@ -4,7 +4,6 @@ from core.server.utils.validations.user import *
 from . import InternalServerErrorException
 from . import UserModel
 from core.models.sessions import SessionModel
-from core.server.utils.security import make_hashed, generate_password
 
 
 # validate: check essential data to sign up
@@ -45,16 +44,11 @@ def create_user():
         user = UserModel()
         user.id = None
         user.uid = data.get("uid")
-        user.salt = make_hashed(datetime.now())
         user.password = data.get("password")
         user.birth_year = data.get("birthYear")
         user.birth_month = data.get("birthMonth")
         user.birth_day = data.get("birthDay")
         user.gender = data.get("gender")
-
-        print("create_user.password >>", user.password)
-        generate_password(user)
-        print("create_user.password >>", user.password)
 
         result["user"] = user.create_user()
 
@@ -75,7 +69,7 @@ def create_session():
 
         session = SessionModel.create_by_user(data.get("user", {}))
 
-        data["user"].update({"session": session})
+        data["user"].update({"session": session.create()})
 
         return data, "200"
 

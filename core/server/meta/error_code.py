@@ -58,7 +58,8 @@ error = {
     "401": {
         "default": {
             "default": "접근 권한이 없습니다.",
-            "user_info": "해당 세션이 유효하지 않습니다."
+            "user_info": "해당 세션이 유효하지 않습니다.",
+            "login": "로그인 정보를 확인해주세요."
         }
     },
     "404": {
@@ -87,7 +88,7 @@ error = {
 }
 
 """
-    400: bed request,
+    400: bad request,
     401: unauthorized
     404: not found
     405: method not allowed

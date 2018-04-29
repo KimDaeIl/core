@@ -4,7 +4,7 @@
 from core.server.utils.validations.user import *
 from . import NotFoundException, InternalServerErrorException
 from core.models.users import UserModel
-from core.server.utils.security import make_hashed, generate_password
+from core.server.utils.security import make_hashed
 
 
 def validate():
@@ -59,10 +59,8 @@ def update_user():
             raise NotFoundException(attribute="user", details="id")
 
         if "password" in data:
-            user.salt = make_hashed(datetime.now())
             user.password = data["password"]
-
-            generate_password(user)
+            user.generate_password()
 
         if "birthYear" in data:
             user.birth_year = data["birthYear"]
@@ -72,7 +70,8 @@ def update_user():
 
         if "birthDay" in data:
             user.birth_day = data["birthDay"]
-        result["user"] = user.create_user()
+
+        result["user"] = user.update_user()
         #
         # if "id" not in result:
         #     raise InternalServerErrorException(attribute="default", details="default")
