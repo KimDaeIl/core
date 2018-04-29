@@ -49,4 +49,4 @@ class Sessions(BaseResource):
             req=request,
             **kwargs
         )
-        return current_app.response_class(data={"session": "delete"})
+        return result
