@@ -43,12 +43,7 @@ def session_validator():
         def check_session(*args, **kwargs):
 
             session = request.headers.get("Authorization")
-
-            print("session_validator.request.**kwargs >> ", kwargs)
-            print("session_validator.request.args >> ", request.args)
-            print("session_validator.request.form >> ", request.form)
-            print("session_validator.request.endpoint >> ", request.endpoint)
-            print("session_validator.request.json >> ", request.json)
+            print("server.utils.validations.session >>", session)
 
             # check session to valid
             if session is None or len(session) == 0:
@@ -74,7 +69,6 @@ def session_validator():
 
             # 3. find session in NoSQL and parse to equal
             sessions = SessionMongo.find_by_id(user_id)
-            print("server.utils.validations.server_session >>", sessions)
 
             # invalid session data
             if len(sessions) == 0:
@@ -93,9 +87,11 @@ def session_validator():
                 raise UnauthorizedException(attribute="default", details="user_info")
 
             for s, u in zip(server_session, session):
+                print(s, u)
                 if s != u:
                     raise UnauthorizedException(attribute="default", details="user_info")
                     break
+
 
             return func(*args, **kwargs)
 

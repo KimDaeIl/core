@@ -3,11 +3,15 @@ from . import *
 from flask import Blueprint
 from flask_restful import Api
 from .users import Users
+from .sessions import Sessions
 
 __all__ = ["users_blue_print"]
 
 users_blue_print = Blueprint("users", __name__, url_prefix="/users")
 api = Api(users_blue_print)
 
-api.add_resource(Users, '', 'user')
-api.add_resource(Users, '/<int:user_id>', endpoint='user_with_id')
+api.add_resource(Users, "", endpoint="user")
+api.add_resource(Users, "/<int:user_id>", endpoint="user_with_id")
+
+api.add_resource(Sessions, "/sessions", endpoint="session")
+api.add_resource(Sessions, "/sessions/<int:user_id>", endpoint="session_with_id")

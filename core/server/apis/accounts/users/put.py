@@ -5,14 +5,13 @@ from core.server.utils.validations.user import *
 from . import NotFoundException, InternalServerErrorException
 from core.models.users import UserModel
 from core.server.utils.security import make_hashed, generate_password
-from . import user_meta
 
 
 def validate():
     def _(data):
         result = {}
-        keys_all = user_meta.get("update").get("all")
-        nullables = user_meta.get("update").get("nullable")
+        keys_all = ["password", "birthYear", "birthMonth", "birthDay", "user_id"]
+        nullables = []
 
         print("user.put.validate.data >> ", data)
         validation_functions = {
@@ -23,24 +22,24 @@ def validate():
             "user_id": lambda v: v if isinstance(v, int) else 0
         }
 
-        for key in keys_all:
-            if key in data:
-                data_value = data[key]
-                print("user.qput.validate.key >> ", key, " / ", data[key])
+        for k in keys_all:
+            if k in data:
+                data_value = data[k]
+                print("user.qput.validate.key >> ", k, " / ", data[k])
 
                 if data_value is None:
                     if (isinstance(data_value, str) and len(data_value)) or \
                                     (isinstance(data_value, int) or data_value) == 0:
-                        if key in nullables:
+                        if k in nullables:
                             data_value = ""
                         else:
-                            raise BadRequestException(attribute=key, details="notNullable")
+                            raise BadRequestException(attribute=k, details="notNullable")
 
                 else:
                     # validation
-                    data_value = validation_functions.get(key)(data_value)
+                    data_value = validation_functions.get(k)(data_value)
 
-                result[key] = data_value
+                result[k] = data_value
 
         print("user.put.validate.result >> ", result)
         return result, "200"
