@@ -10,7 +10,8 @@ class SessionMongo:
 
         if session and isinstance(session, dict):
             if "id" in session and isinstance(session["id"], int):
-                print("mongos.SessionMongo.create >> ", mongo.db.session.insert_one(session))
+                print("mongos.SessionMongo.create >> ",
+                      mongo.db.session.update_one({"id": session.get("id", 0)}, {'$set': session}, upsert=True))
 
         return session
 

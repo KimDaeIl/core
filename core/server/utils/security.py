@@ -2,8 +2,6 @@
 
 from base64 import b64encode, b64decode
 from hashlib import sha3_256
-from core.models.users import UserModel
-from datetime import datetime
 from Crypto import Random
 from Crypto.Cipher import AES
 
@@ -65,6 +63,22 @@ def make_hashed(data):
         return b64encode(sha3_256(data).digest()).decode('utf-8')
 
 
-def generate_password(user):
-    if user and isinstance(user, UserModel):
-        user.password = make_hashed("{}{}{}".format(user.password, user.salt, datetime.now()))
+# def generate_password(user):
+#     if user and isinstance(user, UserModel):
+#         user.salt = make_hashed(datetime.now())
+#         user.password = make_hashed("{}{}".format(user.password, user.salt))
+
+
+def make_password_hash(password, salt):
+    hashed_password = ""
+
+    if password and salt:
+        if not isinstance(password, str):
+            password = str(password)
+
+        if not isinstance(salt, str):
+            salt = str(salt)
+
+        hashed_password = make_hashed("{}{}".format(password, salt))
+
+    return hashed_password

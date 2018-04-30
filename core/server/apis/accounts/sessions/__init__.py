@@ -4,6 +4,9 @@ from flask import request, current_app
 
 from core.server.apis.common import BaseResource
 from core.server.utils.api_creator import ApiCreator
+from core.server.utils.validations.common import session_validator
+
+from core.server.apis.common.exceptions import *
 
 from core.models.sessions import SessionModel
 from core.models.sessions import SessionMongo
@@ -15,18 +18,41 @@ from . import post, get, put, delete
 class Sessions(BaseResource):
     def post(self, *args, **kwargs):
         creator = ApiCreator()
-        creator.run(
+        creator.add(post.validate())
+        creator.add(post.find_user())
+        creator.add(post.create_session())
+        result = creator.run(
             key=["uid", "password"],
             req=request,
             **kwargs
         )
-        return current_app.response_class(data={"session": "post"})
 
+        return result
+
+    @session_validator()
     def get(self, *args, **kwargs):
         return current_app.response_class(data={"session": "get"})
 
+    @session_validator()
     def put(self, *args, **kwargs):
-        return current_app.response_class(data={"session": "put"})
+        creator = ApiCreator()
+        creator.add(put.validate())
+        creator.add(put.update_session())
+        result = creator.run(
+            key=[],
+            req=request,
+            **kwargs
+        )
+        return result
 
+    @session_validator()
     def delete(self, *args, **kwargs):
-        return current_app.response_class(data={"session": "delete"})
+        creator = ApiCreator()
+        creator.add(delete.validate())
+        creator.add(delete.delete_session())
+        result = creator.run(
+            key=[],
+            req=request,
+            **kwargs
+        )
+        return result

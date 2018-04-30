@@ -1,5 +1,8 @@
 # Created users.py by KimDaeil on 04/14/2018
+from datetime import datetime
+
 from core.models import *
+from core.server.utils.security import make_hashed
 
 
 class UserModel(db.Model):
@@ -42,6 +45,17 @@ class UserModel(db.Model):
         result = {}
 
         if self.id != 0:
+            self.generate_password()
+            db.session.add(self)
+            db.session.commit()
+            result = self.to_json()
+
+        return result
+
+    def update_user(self):
+        result = {}
+
+        if self.id != 0:
             db.session.add(self)
             db.session.commit()
             result = self.to_json()
@@ -58,6 +72,10 @@ class UserModel(db.Model):
 
         return result
 
+    def generate_password(self):
+        self.salt = make_hashed(datetime.now())
+        self.password = make_hashed("{}{}".format(self.password, self.salt))
+
     @classmethod
     def find_by_id(cls, user_id):
         user = cls()
@@ -68,3 +86,17 @@ class UserModel(db.Model):
                 user = temp_user
 
         return user
+
+    @classmethod
+    def find_by_email(cls, email):
+        user = cls()
+
+        if email:
+            temp_user = db.session.query(cls).filter(cls.uid == email).first()
+
+            if temp_user:
+                user = temp_user
+
+        return user
+
+
