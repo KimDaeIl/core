@@ -32,7 +32,7 @@ def validate():
     return _
 
 
-def find_user():
+def update_session():
     def _(data):
         result = {}
 
