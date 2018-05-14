@@ -1,8 +1,9 @@
 # Created resopnse.py by KimDaeil on 04/05/2018
 
-from flask import Response, request
-import json
 import datetime
+import json
+
+from flask import Response, request
 
 
 class BaseResponse(Response):
@@ -30,7 +31,7 @@ class ResponseData:
 
 
 def parse_error_code(code, error_keyword):
-    from core.server.meta import error_code
+    from server.meta import error_code
 
     error_msg = ""
     if code and error_keyword:

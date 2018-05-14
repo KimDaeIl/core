@@ -1,7 +1,8 @@
 # Created __init__.py.py by KimDaeil on 04/24/2018
 
 from flask_pymongo import PyMongo
-from core.server.apis.common.exceptions import InternalServerErrorException
+
+from server.apis.common.exceptions import InternalServerErrorException
 
 __all__ = ["mongo"]
 

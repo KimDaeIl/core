@@ -1,9 +1,10 @@
 # Created users.post.py by KimDaeil on 03/31/2018
 
 from core.server.utils.validations.user import *
+
+from models.sessions import SessionModel
 from . import InternalServerErrorException
 from . import UserModel
-from core.models.sessions import SessionModel
 
 
 # validate: check essential data to sign up

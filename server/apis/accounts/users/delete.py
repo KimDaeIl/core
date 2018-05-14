@@ -1,7 +1,7 @@
 # Created users.delete.py by KimDaeil on 03/31/2018
+from models.sessions import SessionModel
 from . import UnauthorizedException, NotFoundException
 from . import UserModel
-from core.models.sessions import SessionModel
 
 
 def validate():

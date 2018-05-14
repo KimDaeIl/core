@@ -2,14 +2,12 @@
 
 # from . import *
 
+from core.server.apis.common import BaseResource
+from core.server.utils.api_creator import ApiCreator
+from core.server.utils.validations.common import session_validator
 from flask import request
 
-from core.server.utils.api_creator import ApiCreator
-from core.server.apis.common import BaseResource
-from core.models.users import UserModel
-from core.server.utils.validations.common import session_validator
-from core.server.apis.common.exceptions import *
-
+from server.apis.common.exceptions import *
 from . import post, put, delete
 
 __all__ = ["UserModel"]

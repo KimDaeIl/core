@@ -2,7 +2,8 @@
 from datetime import datetime
 
 from core.models import *
-from core.server.utils.security import make_hashed
+
+from server.utils import make_hashed
 
 
 class UserModel(db.Model):
