@@ -98,5 +98,3 @@ class UserModel(db.Model):
                 user = temp_user
 
         return user
-
-

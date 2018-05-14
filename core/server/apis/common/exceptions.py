@@ -59,3 +59,31 @@ class RequestTimeoutException(DefaultException):
 class InternalServerErrorException(DefaultException):
     def __init__(self, attribute="default", details="default"):
         super(InternalServerErrorException, self).__init__(code=500, attribute=attribute, details=details)
+
+
+def init_error_handler(current_app):
+
+    # 400
+    @current_app.errorhandler(BadRequestException)
+    def bed_request_handler(e):
+        return e()
+
+    # 401
+    @current_app.errorhandler(UnauthorizedException)
+    def unauthorized_handler(e):
+        return e()
+
+    # 404
+    @current_app.errorhandler(NotFoundException)
+    def not_found_handler(e):
+        return e()
+
+    # 405
+    @current_app.errorhandler(MethodNotAllowedException)
+    def method_not_allowed_handler(e):
+        return e()
+
+    # 500
+    @current_app.errorhandler(InternalServerErrorException)
+    def internal_server_handler(e):
+        return e()
