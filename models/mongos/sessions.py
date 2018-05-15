@@ -1,7 +1,6 @@
 # Created sessions.py by KimDaeil on 04/25/2018
 
-from . import mongo
-from datetime import datetime
+from models.mongos import mongo
 
 
 class SessionMongo:

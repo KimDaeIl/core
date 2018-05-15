@@ -2,8 +2,8 @@
 from . import *
 from flask import Blueprint
 from flask_restful import Api
-from .users import Users
 from .sessions import Sessions
+from .users import Users
 
 __all__ = ["users_blue_print"]
 

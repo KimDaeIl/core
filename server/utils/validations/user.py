@@ -2,8 +2,8 @@
 import re
 from datetime import datetime
 
-from core.server.meta.common import user_meta
-from core.server.utils.security import AESCipher
+from server.meta.common import user_meta
+from server.utils.security import AESCipher
 
 from server.apis.common.exceptions import BadRequestException
 

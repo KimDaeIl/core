@@ -1,16 +1,18 @@
 # Created resource.py by KimDaeil on 03/31/2018
 from flask_restful import Resource
+from server.utils.api_creator import ApiCreator
+from server.apis.common.exceptions import MethodNotAllowedException
 
 
 class BaseResource(Resource):
     def post(self):
-        return {"error": "post is not implemented"}
+        raise MethodNotAllowedException(attribute="default", details="default")
 
     def get(self):
-        return {"error": "get is not implemented"}
+        raise MethodNotAllowedException(attribute="default", details="default")
 
     def put(self):
-        return {"error": "put is not implemented"}
+        raise MethodNotAllowedException(attribute="default", details="default")
 
     def delete(self):
-        return {"error": "delete is not implemented"}
+        raise MethodNotAllowedException(attribute="default", details="default")

@@ -3,9 +3,10 @@
 from datetime import datetime
 
 from server.utils import AESCipher
-from . import SessionModel
+from models.sessions import SessionModel
+from models.users import UserModel
+
 from . import UnauthorizedException, NotFoundException
-from . import UserModel
 from . import request
 
 

@@ -1,14 +1,13 @@
 # Created core.__init__.py by KimDaeil on 03/31/2018
-from core.server.apis.common.exceptions import init_error_handler
-
-from server.apis.common.response import BaseResponse
 
 
 def before_first_request():
     from flask import current_app
+    from server.apis.common.response import BaseResponse
 
     from models import db
     from models.mongos import mongo_init_app
+    from server.apis.common.exceptions import init_error_handler
 
     print("before_first_request")
     current_app.response_class = BaseResponse

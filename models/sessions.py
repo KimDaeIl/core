@@ -2,12 +2,12 @@
 
 from datetime import datetime
 
-from core.models import *
-from core.server.utils.security import AESCipher
-from core.server.utils.security import make_hashed
+from models import *
+from server.utils.security import AESCipher
+from server.utils.security import make_hashed
 from flask import request
 
-from models.mongos import SessionMongo
+from models.mongos.sessions import SessionMongo
 
 
 class SessionModel(db.Model):
