@@ -4,7 +4,7 @@ import datetime
 from flask_sqlalchemy import SQLAlchemy
 from . import *
 
-__all__ = ["db", "String", "Int", "DateTime", "BigInt"]
+__all__ = ["db", "String", "Int", "DateTime", "BigInt", "Bool"]
 
 db = SQLAlchemy()
 
@@ -20,6 +20,12 @@ class BaseColumn(db.Column):
         if 'nullable' not in kwarg:
             kwarg['nullable'] = False
 
+        # if len(args) > 0:
+        #     name = args[0]
+        #
+        #     if isinstance(name, str):
+        #         kwarg["name"] = name
+
         super().__init__(*args, **kwarg)
 
 
@@ -29,6 +35,13 @@ class String(BaseColumn):
             length = None
 
         super().__init__(name, db.String(length), **kwargs)
+
+
+class Bool(BaseColumn):
+    def __init__(self, name, **kwargs):
+        if "default" not in kwargs:
+            kwargs["default"] = True
+        super().__init__(name, db.Boolean, **kwargs)
 
 
 class Int(BaseColumn):

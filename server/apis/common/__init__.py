@@ -2,5 +2,6 @@
 
 from . import *
 from .resource import BaseResource
+from .resource import ApiCreator
 
 # __all__ = ["BaseResource", "ApiCreator"]

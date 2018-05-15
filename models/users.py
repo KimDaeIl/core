@@ -9,14 +9,17 @@ from server.utils import make_hashed
 class UserModel(db.Model):
     __tablename__ = "USERS"
 
-    id = db.Column("id", db.BigInteger, primary_key=True, index=True, autoincrement=True)
+    id = BigInt("id", primary_key=True, index=True, autoincrement=True)
     uid = String("uid", 255, index=True)
     salt = String("salt", 56)
     password = String("password", 256)
     birth_year = Int("birth_year", default=1970)
     birth_month = Int("birth_month", default=1)
     birth_day = Int("birth_day", default=1)
-    gender = String("gender", default='f')
+    push_token = String("push_token", 256)
+    receive_push = Bool("receive_push", default=True)
+    receive_marketing = Bool("receive_marketing", default=True)
+    gender = String("gender", 1, default='f')
     created_at = DateTime("created_at")
 
     session = None
