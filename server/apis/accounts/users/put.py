@@ -2,7 +2,6 @@
 
 
 from models.users import UserModel
-from server.utils.security import AESCipher
 from server.utils.validations.user import *
 from . import NotFoundException, BadRequestException
 
@@ -13,7 +12,7 @@ def validate():
         keys_all = ["password", "birthYear", "birthMonth", "birthDay", "user_id"]
         nullables = []
 
-        print("user.put.validate.data >> ", data)
+        print("user.put.py.validate.data >> ", data)
         validation_functions = {
             "password": lambda v: validate_password(v),
             "birthYear": lambda v: validate_birth_year(v),
@@ -41,7 +40,7 @@ def validate():
 
                 result[k] = data_value
 
-        print("user.put.validate.result >> ", result)
+        print("user.put.py.validate.result >> ", result)
         return result, "200"
 
     return _
@@ -51,8 +50,8 @@ def update_user():
     def _(data):
         result = {}
 
-        print("user.put.update_user.data >> ", data)
-        print("user.put.update_user.password >> ", AESCipher().encrypt(data.get("password")))
+        print("user.put.py.update_user.data >> ", data)
+        print("user.put.py.update_user.password >> ", AESCipher().encrypt(data.get("password")))
         user = UserModel.find_by_id(data.get("user_id", 0))
 
         if not user:

@@ -5,6 +5,7 @@ from flask_restful import Api
 from .sessions import Sessions
 from .users import Users
 from .email import CheckEmail
+from .notifications import Notifications
 
 __all__ = ["users_blue_print"]
 
@@ -18,3 +19,5 @@ api.add_resource(Sessions, "/sessions", endpoint="session")
 api.add_resource(Sessions, "/sessions/<int:user_id>", endpoint="session_with_id")
 
 api.add_resource(CheckEmail, "/checkEmails/<string:email>", endpoint="check_email")
+
+api.add_resource(Notifications, "/<int:user_id>/notifications")

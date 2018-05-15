@@ -1,6 +1,6 @@
 # Created users.__init__.py by KimDaeil on 03/31/2018
 
-from server.apis.common import BaseResource, ApiCreator
+from server.apis.common.resource import *
 from server.utils.validations.common import session_validator
 from flask import request
 
