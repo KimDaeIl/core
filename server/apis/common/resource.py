@@ -20,3 +20,6 @@ class BaseResource(Resource):
 
     def delete(self, *args, **kwargs):
         raise MethodNotAllowedException(attribute="default", details="default")
+
+    def options(self, *args, **kwargs):
+        raise MethodNotAllowedException(attribute="default", details="default")

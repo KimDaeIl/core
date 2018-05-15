@@ -44,7 +44,7 @@ class Users(BaseResource):
         creator.add(delete.validate())
         creator.add(delete.delete_user())
         result = creator.run(
-            key= ["user_id"],
+            key=["user_id"],
             req=request,
             **kwargs)
         return result

@@ -87,7 +87,6 @@ def session_validator():
                 raise UnauthorizedException(attribute="default", details="user_info")
 
             for s, u in zip(server_session, session):
-                print(s, u)
                 if s != u:
                     raise UnauthorizedException(attribute="default", details="user_info")
                     break

@@ -6,7 +6,7 @@ from . import NotFoundException
 def validate():
     def _(data):
         result = {}
-        keys_all = ["receive_push", "receive_marketing"]
+        keys_all = ["user_id", "receive_push", "receive_marketing"]
 
         value = ""
         for key in keys_all:
