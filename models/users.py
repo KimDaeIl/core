@@ -1,7 +1,7 @@
 # Created users.py by KimDaeil on 04/14/2018
 from datetime import datetime
 
-from core.models import *
+from models import *
 
 from server.utils import make_hashed
 

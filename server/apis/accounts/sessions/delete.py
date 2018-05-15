@@ -1,8 +1,8 @@
 # Created delete.py by KimDaeil on 04/28/2018
 # from datetime import datetime
 from server.utils import AESCipher
-from . import SessionModel
-from . import UnauthorizedException, NotFoundException
+from models.sessions import SessionModel
+from server.apis.common.exceptions import UnauthorizedException, NotFoundException
 from . import request
 
 

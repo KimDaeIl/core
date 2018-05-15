@@ -3,9 +3,9 @@
 from datetime import datetime
 
 from server.utils import AESCipher
-from . import SessionModel
-from . import UnauthorizedException, NotFoundException
-from . import UserModel
+from models.sessions import SessionModel
+from server.apis.common.exceptions import UnauthorizedException, NotFoundException
+from models.users import UserModel
 from . import request
 
 
