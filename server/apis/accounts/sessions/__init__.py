@@ -5,7 +5,7 @@ from server.utils.validations.common import session_validator
 from flask import request, current_app
 
 from server.apis.common.exceptions import *
-from . import post, get, put, delete
+from . import post, put, delete
 
 
 class Sessions(BaseResource):
@@ -21,10 +21,6 @@ class Sessions(BaseResource):
         )
 
         return result
-
-    @session_validator()
-    def get(self, *args, **kwargs):
-        return current_app.response_class(data={"session": "get"})
 
     @session_validator()
     def put(self, *args, **kwargs):

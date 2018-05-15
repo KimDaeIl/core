@@ -1,7 +1,5 @@
 # Created users.__init__.py by KimDaeil on 03/31/2018
 
-# from . import *
-
 from server.apis.common import BaseResource, ApiCreator
 from server.utils.validations.common import session_validator
 from flask import request
@@ -27,9 +25,6 @@ class Users(BaseResource):
         )
 
         return result
-
-    def get(self, *args, **kwargs):
-        raise MethodNotAllowedException(attribute="default", details="default")
 
     @session_validator()
     def put(self, *args, **kwargs):
