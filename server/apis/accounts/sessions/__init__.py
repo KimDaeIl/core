@@ -5,6 +5,7 @@ from server.utils.api_creator import ApiCreator
 from server.utils.validations.common import session_validator
 from flask import request, current_app
 
+from server.apis.common.exceptions import *
 from . import post, get, put, delete
 
 
