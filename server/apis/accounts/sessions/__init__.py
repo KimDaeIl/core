@@ -1,7 +1,6 @@
 # Created __init__.py.py by KimDaeil on 04/28/2018
 
 from server.apis.common.resource import *
-from server.utils.validations.common import session_validator
 from server.apis.common.exceptions import *
 from . import post, put, delete
 

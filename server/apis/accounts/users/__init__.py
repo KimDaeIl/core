@@ -1,11 +1,9 @@
 # Created users.__init__.py by KimDaeil on 03/31/2018
 
 from server.apis.common.resource import *
-from server.utils.validations.common import session_validator
-from flask import request
+from server.apis.common.exceptions import *
 
 from models.users import UserModel
-from server.apis.common.exceptions import *
 from . import post, put, delete
 
 __all__ = ["UserModel"]
