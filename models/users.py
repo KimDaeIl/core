@@ -37,6 +37,8 @@ class UserModel(db.Model):
             "birthMonth": self.birth_month,
             "birthDay": self.birth_day,
             "gender": self.gender,
+            "push": self.receive_push,
+            "marketing": self.receive_marketing,
             "createdAt": self.created_at.isoformat()
         }
 
