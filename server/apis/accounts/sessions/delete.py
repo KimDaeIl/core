@@ -1,16 +1,14 @@
 # Created delete.py by KimDaeil on 04/28/2018
-# from datetime import datetime
 from server.utils import AESCipher
 from models.sessions import SessionModel
 from . import UnauthorizedException, NotFoundException
-from . import request
 
 
 def validate():
     def _(data):
         result = {}
 
-        session = request.headers.get("Authorization", "")
+        session = data.get("Authorization", "")
         session_value = AESCipher().decrypt(session).split("_")
 
         if len(session_value) != 3:

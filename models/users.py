@@ -16,9 +16,9 @@ class UserModel(db.Model):
     birth_year = Int("birth_year", default=1970)
     birth_month = Int("birth_month", default=1)
     birth_day = Int("birth_day", default=1)
-    push_token = String("push_token", 256)
-    receive_push = Bool("receive_push", default=True)
-    receive_marketing = Bool("receive_marketing", default=True)
+    push_token = String("push_token", 256, default="",server_default="")
+    receive_push = Bool("receive_push", default=True, server_default='t')
+    receive_marketing = Bool("receive_marketing", default=True, server_default='t')
     gender = String("gender", 1, default='f')
     created_at = DateTime("created_at")
 
