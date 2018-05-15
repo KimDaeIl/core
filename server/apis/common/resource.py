@@ -8,14 +8,14 @@ __all__ = ["BaseResource", "ApiCreator", "request"]
 
 
 class BaseResource(Resource):
-    def post(self):
+    def post(self, *args, **kwargs):
         raise MethodNotAllowedException(attribute="default", details="default")
 
-    def get(self):
+    def get(self, *args, **kwargs):
         raise MethodNotAllowedException(attribute="default", details="default")
 
-    def put(self):
+    def put(self, *args, **kwargs):
         raise MethodNotAllowedException(attribute="default", details="default")
 
-    def delete(self):
+    def delete(self, *args, **kwargs):
         raise MethodNotAllowedException(attribute="default", details="default")
