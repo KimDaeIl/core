@@ -16,7 +16,7 @@ class UserModel(db.Model):
     birth_year = Int("birth_year", default=1970)
     birth_month = Int("birth_month", default=1)
     birth_day = Int("birth_day", default=1)
-    push_token = String("push_token", 256, default="",server_default="")
+    push_token = String("push_token", 256, default="", server_default="")
     receive_push = Bool("receive_push", default=True, server_default='t')
     receive_marketing = Bool("receive_marketing", default=True, server_default='t')
     gender = String("gender", 1, default='f')
@@ -37,6 +37,7 @@ class UserModel(db.Model):
             "birthMonth": self.birth_month,
             "birthDay": self.birth_day,
             "gender": self.gender,
+            "pushToken": self.push_token,
             "push": self.receive_push,
             "marketing": self.receive_marketing,
             "createdAt": self.created_at.isoformat()

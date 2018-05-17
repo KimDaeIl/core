@@ -6,6 +6,7 @@ from .sessions import Sessions
 from .users import Users
 from .email import CheckEmail
 from .notifications import Notifications
+from .push_token import PushToken
 
 __all__ = ["users_blue_print"]
 
@@ -21,3 +22,5 @@ api.add_resource(Sessions, "/sessions/<int:user_id>", endpoint="session_with_id"
 api.add_resource(CheckEmail, "/checkEmails/<string:email>", endpoint="check_email")
 
 api.add_resource(Notifications, "/<int:user_id>/notifications")
+
+api.add_resource(PushToken, "/<int:user_id>/push")
