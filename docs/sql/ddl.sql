@@ -20,9 +20,9 @@ receive_marketing BOOLEAN NOT NULL DEFAULT 'T',
 gender VARCHAR(1) NOT NULL DEFAULT 'f',
 created_at timestamp with time zone default now()
 );
-ALTER TABLE users ADD CONSTRAINT pk_usersPRIMARY KEY(id);
+ALTER TABLE users ADD CONSTRAINT pk_users PRIMARY KEY(id);
 ALTER TABLE users ADD CONSTRAINT unique_user_uid UNIQUE (uid);
-CREATE INDEX users_uid_idx ON users USING HASH(id);
+CREATE INDEX idx_users_uid ON users USING HASH(uid);
 
 
 DROP SEQUENCE seq_session_id CASCADE;

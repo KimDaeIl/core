@@ -4,7 +4,7 @@ import datetime
 from flask_sqlalchemy import SQLAlchemy
 from . import *
 
-__all__ = ["db", "String", "Int", "DateTime", "BigInt", "Bool"]
+__all__ = ["db", "String", "Int", "DateTime", "BigInt", "Bool", "seq_users_id"]
 
 db = SQLAlchemy()
 
@@ -50,8 +50,9 @@ class Int(BaseColumn):
 
 
 class BigInt(BaseColumn):
-    def __init__(self, name, **kwargs):
-        super().__init__(name, db.BigInteger, **kwargs)
+    def __init__(self, name, *args, **kwargs):
+        args = (name, db.BigInteger) + args
+        super().__init__(*args, **kwargs)
 
 
 class DateTime(BaseColumn):
@@ -64,3 +65,6 @@ class DateTime(BaseColumn):
             kwargs['default'] = datetime.datetime.now()
 
         super().__init__(name, db.DateTime, **kwargs)
+
+
+seq_users_id = db.Sequence("seq_users_id", start=1, minvalue=0, increment=1, cache=10, cycle=True, metadata=db.Model.metadata)

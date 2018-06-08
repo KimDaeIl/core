@@ -11,17 +11,18 @@ from models.mongos.sessions import SessionMongo
 
 
 class SessionModel(db.Model):
-    __tablename__ = "SESSIONS"
+    __tablename__ = 'SESSIONS'
 
-    id = BigInt("id", primary_key=True, index=True)
+    id = BigInt("id", primary_key=True, index=True, autoincrement=False)
     session = String("session", 256)
     ip_address = String("ip_address", 40)
     platform = String("platform", 64)
     platform_version = String("platform_version", 64)
-    ##
     salt = String("salt", 126)
     updated_at = DateTime("updated_at")
     created_at = DateTime("created_at")
+
+    __table_agrs__ = (db.Index("idx_sessions_session", "session", postgresql_using="hash"))
 
     def __init__(self):
         self.id = 0

@@ -17,7 +17,7 @@ class Users(BaseResource):
         creator.add(post.create_session())
         # creator.add(post.send_auth_mail())
         result = creator.run(
-            key=["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
+            key=["uid", "password", "birthYear", "birthMonth", "birthDay", "gender", "salt"],
             req=request,
             **kwargs
         )

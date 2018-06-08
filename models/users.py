@@ -7,20 +7,23 @@ from server.utils import make_hashed
 
 
 class UserModel(db.Model):
-    __tablename__ = "USERS"
+    __tablename__ = 'USERS'
 
-    id = BigInt("id", primary_key=True, index=True, autoincrement=True)
+    id = BigInt("id", primary_key=True, index=True, server_default=seq_users_id.next_value())
     uid = String("uid", 255, index=True)
     salt = String("salt", 56)
     password = String("password", 256)
     birth_year = Int("birth_year", default=1970)
     birth_month = Int("birth_month", default=1)
     birth_day = Int("birth_day", default=1)
-    push_token = String("push_token", 256, default="", server_default="")
-    receive_push = Bool("receive_push", default=True, server_default='t')
-    receive_marketing = Bool("receive_marketing", default=True, server_default='t')
-    gender = String("gender", 1, default='f')
+    push_token = String("push_token", 256, default="", server_default="t")
+    receive_push = Bool("receive_push", default=True, server_default="t")
+    receive_marketing = Bool("receive_marketing", default=True, server_default="t")
+    gender = String("gender", 1, default="f")
     created_at = DateTime("created_at")
+
+    __table_agrs__ = (db.UniqueConstraint("uid"),
+                      db.Index("idx_users_uid", "uid", postgresql_using="hash"))
 
     session = None
 
@@ -80,7 +83,6 @@ class UserModel(db.Model):
         return result
 
     def generate_password(self):
-        self.salt = make_hashed(datetime.now())
         self.password = make_hashed("{}{}".format(self.password, self.salt))
 
     @classmethod

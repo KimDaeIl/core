@@ -20,7 +20,10 @@ def validate():
         result["uid"] = validate_uid(data.get("uid"))
 
         # password
-        result["password"] = validate_password(data.get("password"))
+        result["password"] = data.get("password")
+        # (?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!#$%()*+-./:<>?@^_~])(?=.{12,16})
+
+        result["salt"] = AESCipher().encrypt(data.get("salt"))
 
         # birth_date
         result["birthYear"], result["birthMonth"], result["birthDay"] = validate_birth_date(data.get("birthYear"),
@@ -46,6 +49,7 @@ def create_user():
         user.id = None
         user.uid = data.get("uid")
         user.password = data.get("password")
+        user.password = data.get("salt")
         user.birth_year = data.get("birthYear")
         user.birth_month = data.get("birthMonth")
         user.birth_day = data.get("birthDay")

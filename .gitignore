@@ -130,5 +130,6 @@ venv/
 app/
 __pycache__/
 /config.py
-
+/app.py
+/config.py
 # End of https://www.gitignore.io/api/macos,linux,windows,pycharm+all
