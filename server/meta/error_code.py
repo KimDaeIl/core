@@ -15,19 +15,19 @@ error = {
             "format": "이메일 형식이 맞지 않습니다.",
             "notNullable": "이메일은 초기화할 수 없습니다."
         },
-        "password": {
-            "default": "비밀번호가 없는데예?",
-            "format": "비밀번호의 길이는 {0} ~ {1}자, 대문자는 최소 {2}자, 특수문자는 최소 1자에 {3} 만 허용됩니다.".format(
-                user_meta.get("password").get("minLength"), user_meta.get("password").get("maxLength"),
-                user_meta.get("password").get("upper_case").get("minLength"),
-                ", ".join(user_meta.get("password").get("special").get("enum").replace("\\", ""))),
-            "length": "비밀번호의 길이는 {0} ~ {1}자 입니다".format(user_meta.get("password").get("minLength"),
-                                                        user_meta.get("password").get("maxLength")),
-            "special": "허용되는 특수 문자는 [{0}] 입니다".format(
-                ", ".join(user_meta.get("password").get("special").get("enum").replace("\\", ""))),
-            "upper": "대문자 최소 {0}자는 포함되어야 합니다.",
-            "notNullable": "비밀번호은 초기화할 수 없습니다."
-        },
+        # "password": {
+        #     "default": "비밀번호가 없는데예?",
+        #     "format": "비밀번호의 길이는 {0} ~ {1}자, 대문자는 최소 {2}자, 특수문자는 최소 1자에 {3} 만 허용됩니다.".format(
+        #         user_meta.get("password").get("minLength"), user_meta.get("password").get("maxLength"),
+        #         user_meta.get("password").get("upper_case").get("minLength"),
+        #         ", ".join(user_meta.get("password").get("special").get("enum").replace("\\", ""))),
+        #     "length": "비밀번호의 길이는 {0} ~ {1}자 입니다".format(user_meta.get("password").get("minLength"),
+        #                                                 user_meta.get("password").get("maxLength")),
+        #     "special": "허용되는 특수 문자는 [{0}] 입니다".format(
+        #         ", ".join(user_meta.get("password").get("special").get("enum").replace("\\", ""))),
+        #     "upper": "대문자 최소 {0}자는 포함되어야 합니다.",
+        #     "notNullable": "비밀번호은 초기화할 수 없습니다."
+        # },
         "birthYear": {
             "default": "생년이 없는데예?",
             "outOfRange": "잘못된 연도입니다.",

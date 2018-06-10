@@ -10,19 +10,6 @@ user_meta = {
         "default": "f",
         "enum": ["m", "f"]
     },
-    "password": {
-        "maxLength": 16,
-        "minLength": 12,
-        "special": {
-            "minLength": 1,
-            "maxLength": 14,
-            "enum": "!#$%()*+-./:<>?@^_~"
-        },
-        "upper_case": {
-            "minLength": 1,
-            "maxLength": 14
-        }
-    },
     "birthYear": {
         "minLength": 1970
     },

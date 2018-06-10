@@ -17,7 +17,7 @@ class Users(BaseResource):
         creator.add(post.create_session())
         # creator.add(post.send_auth_mail())
         result = creator.run(
-            key=["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
+            key=["uid", "password", "birthYear", "birthMonth", "birthDay", "gender", "salt"],
             req=request,
             **kwargs
         )
@@ -26,6 +26,7 @@ class Users(BaseResource):
 
     @session_validator()
     def put(self, *args, **kwargs):
+        # print(kwargs)
         creator = ApiCreator()
         creator.add(put.validate())
         creator.add(put.update_user())

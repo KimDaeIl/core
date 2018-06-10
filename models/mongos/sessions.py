@@ -32,3 +32,15 @@ class SessionMongo:
         print("mongos.SessionMongo.find_by_id >> ", result)
 
         return result
+
+    @classmethod
+    def find_by_session(cls, arg):
+
+        session = {}
+        if arg and len(arg) > 0:
+            temp = mongo.db.session.find_one({"session": arg}, {"_id": False})
+
+            if temp:
+                session = temp
+                
+        return session

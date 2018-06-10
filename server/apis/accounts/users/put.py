@@ -9,12 +9,13 @@ from . import NotFoundException, BadRequestException
 def validate():
     def _(data):
         result = {}
-        keys_all = ["password", "birthYear", "birthMonth", "birthDay", "user_id"]
+        keys_all = ["password", "birthYear", "birthMonth", "birthDay", "user_id","salt"]
         nullables = []
 
         print("user.put.py.validate.data >> ", data)
         validation_functions = {
-            "password": lambda v: validate_password(v),
+            "password": lambda v: v,
+            "salt": lambda v: v,
             "birthYear": lambda v: validate_birth_year(v),
             "birthMonth": lambda v: validate_birth_month(result["birthYear"], v),
             "birthDay": lambda v: validate_birth_day(result["birthYear"], result["birthMonth"], v),
@@ -50,8 +51,8 @@ def update_user():
     def _(data):
         result = {}
 
-        print("user.put.py.update_user.data >> ", data)
-        print("user.put.py.update_user.password >> ", AESCipher().encrypt(data.get("password")))
+        # print("user.put.py.update_user.data >> ", data)
+        # print("user.put.py.update_user.password >> ", AESCipher().encrypt(data.get("password")))
         user = UserModel.find_by_id(data.get("user_id", 0))
 
         if not user:
@@ -59,7 +60,7 @@ def update_user():
 
         if "password" in data:
             user.password = data["password"]
-            user.generate_password()
+            user.salt = data["salt"]
 
         if "birthYear" in data:
             user.birth_year = data["birthYear"]

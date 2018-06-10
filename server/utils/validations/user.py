@@ -24,29 +24,6 @@ def validate_uid(uid):
     return uid
 
 
-def validate_password(password):
-    print("server.utils.validations.validate_password >> ", "password")
-    password_meta = user_meta.get("password")
-
-    if not isinstance(password, str):
-        password = str(password)
-
-    # TODO 2018.04. 08: decryption by AES with key in config of app
-    dec_password = AESCipher().decrypt(password)
-
-    # 길이
-    if len(dec_password) < password_meta.get("minLength") or password_meta.get('maxLength') < len(dec_password):
-        raise BadRequestException("password", "length")
-
-    if not bool(re.match(r"(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[{0}])(?=.{{{1},{2}}})".format(
-            password_meta.get("special").get("enum"),
-            password_meta.get("minLength"),
-            password_meta.get("maxLength")), dec_password)):
-        raise BadRequestException("password", "format")
-
-    return password
-
-
 def validate_birth_date(year, month, day):
     print("server.utils.validations.validate_birth_date >> ")
     year = validate_birth_year(year)
