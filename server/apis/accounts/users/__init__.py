@@ -26,6 +26,7 @@ class Users(BaseResource):
 
     @session_validator()
     def put(self, *args, **kwargs):
+        # print(kwargs)
         creator = ApiCreator()
         creator.add(put.validate())
         creator.add(put.update_user())

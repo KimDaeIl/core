@@ -85,22 +85,20 @@ class SessionModel(db.Model):
 
     @classmethod
     def create_by_user(cls, user):
-        if user is None or "id" not in user:
-            # TODO: 2018. 04. 20. raise error
-            pass
-
-        user_agent = request.user_agent
-
         session = cls()
-        session.id = user.get("id", 0)
-        session.salt = make_salt(user.get("salt", ""))
-        session.session = generate_session(user.get("id"), request.remote_addr, session.salt)
-        session.ip_address = request.remote_addr
-        session.platform = user_agent.platform if user_agent.platform else ""
-        session.platform_version = user_agent.version if user_agent.version else ""
+        if user and "id" in user:
+            user_agent = request.user_agent
+
+            session.id = user.get("id", 0)
+            session.salt = make_salt(user.get("salt", ""))
+            session.session = generate_session(user.get("id"), request.remote_addr, session.salt)
+            session.ip_address = request.remote_addr
+            session.platform = user_agent.platform if user_agent.platform else ""
+            session.platform_version = user_agent.version if user_agent.version else ""
 
         return session
 
+    # be going to remove this function
     @classmethod
     def find_by_id(cls, user_id):
         session = cls()
@@ -110,6 +108,18 @@ class SessionModel(db.Model):
 
             if temp_session:
                 session = temp_session
+
+        return session
+
+    @classmethod
+    def find_by_session(cls, arg):
+        session = cls()
+
+        if arg and len(arg) > 0:
+            session_model = db.session.query(SessionModel).filter(SessionModel.session == arg).first()
+
+            if session_model:
+                session = session_model
 
         return session
 

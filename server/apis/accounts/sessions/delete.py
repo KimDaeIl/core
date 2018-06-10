@@ -1,5 +1,5 @@
 # Created delete.py by KimDaeil on 04/28/2018
-from server.utils import AESCipher
+from server.utils.security import AESCipher
 from models.sessions import SessionModel
 from . import UnauthorizedException, NotFoundException
 

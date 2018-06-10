@@ -25,7 +25,6 @@ class AESCipher(object):
         try:
             raw = self._pad(raw)
             iv = Random.new().read(AES.block_size)
-            print(b64encode(iv).decode('utf-8'))
             cipher = AES.new(self.key, AES.MODE_CBC, iv)
             result = b64encode(iv + cipher.encrypt(raw)).decode('utf-8')
         except Exception as e:

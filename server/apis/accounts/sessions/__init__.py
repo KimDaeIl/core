@@ -6,19 +6,21 @@ from . import post, put, delete
 
 
 class Sessions(BaseResource):
+    # login by uid as email
     def post(self, *args, **kwargs):
         creator = ApiCreator()
         creator.add(post.validate())
         creator.add(post.find_user())
         creator.add(post.create_session())
         result = creator.run(
-            key=["uid", "password"],
+            key=["uid", "password", "salt"],
             req=request,
             **kwargs
         )
 
         return result
 
+    # login by session
     @session_validator()
     def put(self, *args, **kwargs):
         creator = ApiCreator()
@@ -31,6 +33,7 @@ class Sessions(BaseResource):
         )
         return result
 
+    # logout
     @session_validator()
     def delete(self, *args, **kwargs):
         creator = ApiCreator()

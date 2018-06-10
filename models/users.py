@@ -3,7 +3,7 @@ from datetime import datetime
 
 from models import *
 
-from server.utils import make_hashed
+from server.utils.security import make_hashed
 
 
 class UserModel(db.Model):
@@ -11,7 +11,7 @@ class UserModel(db.Model):
 
     id = BigInt("id", primary_key=True, index=True, server_default=seq_users_id.next_value())
     uid = String("uid", 255, index=True)
-    salt = String("salt", 56)
+    salt = String("salt", 256)
     password = String("password", 256)
     birth_year = Int("birth_year", default=1970)
     birth_month = Int("birth_month", default=1)
@@ -55,7 +55,6 @@ class UserModel(db.Model):
         result = {}
 
         if self.id != 0:
-            self.generate_password()
             db.session.add(self)
             db.session.commit()
             result = self.to_json()
@@ -82,8 +81,8 @@ class UserModel(db.Model):
 
         return result
 
-    def generate_password(self):
-        self.password = make_hashed("{}{}".format(self.password, self.salt))
+    # def generate_password(self):
+    #     self.password = make_hashed("{}{}".format(self.password, self.salt))
 
     @classmethod
     def find_by_id(cls, user_id):

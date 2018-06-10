@@ -1,6 +1,6 @@
 # Created post.py by KimDaeil on 04/28/2018
 
-from server.utils.security import make_password_hash
+from server.utils.security import make_hashed
 from . import NotFoundException, UnauthorizedException
 from models.sessions import SessionModel
 from models.users import UserModel
@@ -10,7 +10,7 @@ def validate():
     def _(data):
         result = {}
 
-        keys_all = ["uid", "password"]
+        keys_all = ["uid", "password", "salt"]
         nullables = []
 
         for k in keys_all:
@@ -34,7 +34,8 @@ def find_user():
         if user.id == 0:
             raise NotFoundException(attribute="user", details="default")
 
-        password = make_password_hash(data.get("password", ""), user.salt)
+        password = make_hashed(data.get("password"))
+        salt = data.get("hash")
 
         if user.uid != data.get("uid", "") or user.password != password:
             raise UnauthorizedException(attribute="default", details="login")

@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from server.utils import AESCipher
+from server.utils.security import AESCipher
 from models.sessions import SessionModel
 from models.users import UserModel
 

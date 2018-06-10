@@ -1,6 +1,7 @@
 # Created users.post.py by KimDaeil on 03/31/2018
 
 from server.utils.validations.user import *
+from server.utils.security import make_hashed
 
 from models.sessions import SessionModel
 from . import InternalServerErrorException
@@ -19,11 +20,12 @@ def validate():
         #  uid
         result["uid"] = validate_uid(data.get("uid"))
 
-        # password
-        result["password"] = data.get("password")
         # (?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!#$%()*+-./:<>?@^_~])(?=.{12,16})
 
-        result["salt"] = AESCipher().encrypt(data.get("salt"))
+        # password >> hashed by plain password in client
+        result["salt"] = data.get("salt")
+
+        result["password"] = make_hashed(data.get("password"))  # hash with salt by password \
 
         # birth_date
         result["birthYear"], result["birthMonth"], result["birthDay"] = validate_birth_date(data.get("birthYear"),
@@ -49,7 +51,7 @@ def create_user():
         user.id = None
         user.uid = data.get("uid")
         user.password = data.get("password")
-        user.password = data.get("salt")
+        user.salt = data.get("salt")
         user.birth_year = data.get("birthYear")
         user.birth_month = data.get("birthMonth")
         user.birth_day = data.get("birthDay")
@@ -73,6 +75,9 @@ def create_session():
         # pass
 
         session = SessionModel.create_by_user(data.get("user", {}))
+
+        if session.id == 0:
+            raise InternalServerErrorException(attribute="default", details="default")
 
         data["user"].update({"session": session.create()})
 
