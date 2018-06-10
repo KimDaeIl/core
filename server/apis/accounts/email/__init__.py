@@ -1,6 +1,6 @@
 # Created __init__.py.py by KimDaeil on 05/15/2018
-from server.apis.common.resource import *
-from server.apis.common.exceptions import *
+from core.server.apis.common.resource import *
+from core.server.apis.common.exceptions import *
 
 from . import get
 

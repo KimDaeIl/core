@@ -3,11 +3,11 @@
 
 def before_first_request():
     from flask import current_app
-    from server.apis.common.response import BaseResponse
+    from core.server.apis.common.response import BaseResponse
 
-    from models import db
-    from models.mongos import mongo_init_app
-    from server.apis.common.exceptions import init_error_handler
+    from core.models import db
+    from core.models.mongos import mongo_init_app
+    from core.server.apis.common.exceptions import init_error_handler
 
     print("before_first_request")
     current_app.response_class = BaseResponse

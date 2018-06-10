@@ -1,5 +1,5 @@
 # Created ㅔㅕㅅ.py by KimDaeil on 05/15/2018
-from models.users import UserModel
+from core.models.users import UserModel
 from . import NotFoundException
 
 

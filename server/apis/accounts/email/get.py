@@ -1,6 +1,6 @@
 # Created get.py by KimDaeil on 05/15/2018
-from models.users import UserModel
-from server.utils.validations.user import validate_uid
+from core.models.users import UserModel
+from core.server.utils.validations.user import validate_uid
 from . import BadRequestException
 
 

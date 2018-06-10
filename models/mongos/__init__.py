@@ -3,7 +3,7 @@
 from flask_pymongo import PyMongo
 # from .sessions import SessionMongo
 
-from server.apis.common.exceptions import InternalServerErrorException
+from core.server.apis.common.exceptions import InternalServerErrorException
 
 __all__ = ["mongo"]
 

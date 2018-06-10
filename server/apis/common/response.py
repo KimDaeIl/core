@@ -31,7 +31,7 @@ class ResponseData:
 
 
 def parse_error_code(code, error_keyword):
-    from server.meta import error_code
+    from core.server.meta import error_code
 
     error_msg = ""
     if code and error_keyword:

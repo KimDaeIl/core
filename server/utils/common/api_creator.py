@@ -3,7 +3,7 @@
 
 from flask import current_app
 
-from server.utils.validations.common import validator_decorator
+from core.server.utils.validations.common import validator_decorator
 
 
 class ApiCreator(object):

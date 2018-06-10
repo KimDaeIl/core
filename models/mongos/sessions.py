@@ -1,6 +1,6 @@
 # Created sessions.py by KimDaeil on 04/25/2018
 
-from models.mongos import mongo
+from core.models.mongos import mongo
 
 
 class SessionMongo:

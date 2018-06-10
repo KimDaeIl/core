@@ -1,7 +1,7 @@
 # Created exception.py by KimDaeil on 04/08/2018
 from flask import current_app
 
-from server.meta.error_code import error
+from core.server.meta.error_code import error
 
 __all__ = ["BadRequestException", "UnauthorizedException", "NotFoundException", "MethodNotAllowedException",
            "RequestTimeoutException", "InternalServerErrorException"]

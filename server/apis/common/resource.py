@@ -1,9 +1,9 @@
 # Created resource.py by KimDaeil on 03/31/2018
 from flask_restful import Resource
-from server.utils.api_creator import ApiCreator
+from core.server.utils.common.api_creator import ApiCreator
 from flask import request
-from server.apis.common.exceptions import MethodNotAllowedException
-from server.utils.validations.common import session_validator
+from core.server.apis.common.exceptions import MethodNotAllowedException
+from core.server.utils.validations.common import session_validator
 
 __all__ = ["BaseResource", "ApiCreator", "request", "session_validator"]
 

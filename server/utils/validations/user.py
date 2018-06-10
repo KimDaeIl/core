@@ -2,10 +2,10 @@
 import re
 from datetime import datetime
 
-from server.meta.common import user_meta
-from server.utils.security import AESCipher
+from core.server.meta.common import user_meta
+from core.server.utils.common.security import AESCipher
 
-from server.apis.common.exceptions import BadRequestException
+from core.server.apis.common.exceptions import BadRequestException
 
 
 def validate_uid(uid):
