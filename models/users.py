@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from core.models import *
-
+from core.models import seq_users_id
 from core.server.utils import make_hashed
 
 

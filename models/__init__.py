@@ -4,7 +4,7 @@ import datetime
 from flask_sqlalchemy import SQLAlchemy
 from . import *
 
-__all__ = ["db", "String", "Int", "DateTime", "BigInt", "Bool", "seq_users_id"]
+__all__ = ["db", "String", "Int", "DateTime", "BigInt", "Bool"]
 
 db = SQLAlchemy()
 
