@@ -46,6 +46,7 @@ class SessionModel(db.Model):
 
     def create(self):
         session = {}
+
         if self.id and self.id > 0:
             db.session.add(self)
             db.session.commit()
@@ -61,6 +62,7 @@ class SessionModel(db.Model):
     def insert_or_update_in_mongo(self):
         session = self.to_json(True)
 
+        print("sessionModel.insert_or_upate_in_mongo >> ", session)
         SessionMongo.create_session(session)
 
         if "salt" in session:

@@ -44,14 +44,24 @@ def update_session():
 
         session = SessionModel.find_by_id(data.get("user_id", 0))
         session.updated_at = datetime.now()
-        session.create()
+        result = session.create()
 
-        user = UserModel.find_by_id(user_id)
+        return result, "200"
+
+    return _
+
+
+def get_user_info():
+    def _(data):
+        result = {}
+
+        user = UserModel.find_by_id(data.get("id", 0))
 
         if user.id == 0:
             raise NotFoundException("user", "default")
 
-        result["user"] = user.to_json()
+        result.update({"user": user.to_json()})
+        result["user"].update({"session": data})
 
         return result, "200"
 

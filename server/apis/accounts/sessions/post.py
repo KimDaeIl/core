@@ -28,6 +28,7 @@ def validate():
 def find_user():
     def _(data):
         result = {}
+        print("session.post.find_user.data >> ", data)
 
         user = UserModel.find_by_email(data.get("uid", ""))
 
@@ -35,7 +36,7 @@ def find_user():
             raise NotFoundException(attribute="user", details="default")
 
         password = make_hashed(data.get("password"))
-        salt = data.get("hash")
+        # salt = data.get("hash")
 
         if user.uid != data.get("uid", "") or user.password != password:
             raise UnauthorizedException(attribute="default", details="login")
@@ -54,12 +55,17 @@ def create_session():
         print("session.post.create_session >> ", data)
         if "user" in data and "id" in data["user"]:
             session = SessionModel.find_by_id(data["user"]["id"])
+            print("session.post.create_session_0 >> ")
 
-            if session.id != 0:
+            if session.id == 0:
+                print("session.post.create_session_1>> ")
+                session = SessionModel.create_by_user(data["user"])
+            else:
                 session.update_session(data["user"])
 
-                data.get("user", {}).update(session.create())
-                result = data
+            data.get("user", {}).update({"session":session.create()})
+
+            result = data
 
         return result, "200"
 

@@ -26,6 +26,7 @@ class Sessions(BaseResource):
         creator = ApiCreator()
         creator.add(put.validate())
         creator.add(put.update_session())
+        creator.add(put.get_user_info())
         result = creator.run(
             key=[],
             req=request,

@@ -25,7 +25,7 @@ def validate():
         # password >> hashed by plain password in client
         result["salt"] = data.get("salt")
 
-        result["password"] = make_hashed(data.get("password"))  # hash with salt by password \
+        result["password"] = data.get("password")  # hash with salt by password \
 
         # birth_date
         result["birthYear"], result["birthMonth"], result["birthDay"] = validate_birth_date(data.get("birthYear"),
@@ -50,7 +50,7 @@ def create_user():
         user = UserModel()
         user.id = None
         user.uid = data.get("uid")
-        user.password = data.get("password")
+        user.password = make_hashed(data.get("password"))
         user.salt = data.get("salt")
         user.birth_year = data.get("birthYear")
         user.birth_month = data.get("birthMonth")
