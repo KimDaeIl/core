@@ -18,14 +18,10 @@ class ApiCreator(object):
     def run(self, **kwargs):
 
         data = kwargs["data"] if kwargs is not None and "data" in kwargs else {}
-        status = kwargs["status"] if kwargs is not None and "status" in kwargs else "400"
 
-        while len(self.func_list) > 0 and status == "200":
+        while len(self.func_list) > 0:
             func = self.func_list.pop(0)
-            data, status = func(data)
-
-        print("ApiCreator.run.status >> ", status)
-        print("ApiCreator.run.data >> ", data)
+            data = func(data)
 
         response = current_app.response_class(data=data)
 

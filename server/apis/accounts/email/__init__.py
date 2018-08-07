@@ -8,8 +8,8 @@ from . import get
 class CheckEmail(BaseResource):
     def get(self, *args, **kwargs):
         api_creator = ApiCreator()
-        api_creator.add(get.validator())
-        api_creator.add(get.check_email())
+        api_creator.add(get.validator)
+        api_creator.add(get.check_email)
         result = api_creator.run(
             key=["email"],
             req=request,

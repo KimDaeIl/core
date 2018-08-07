@@ -9,89 +9,76 @@ from . import UserModel
 
 
 # validate: check essential data to sign up
-def validate():
-    def _(data):
-        result = {}
-        data_value = None
+def validate(data):
+    result = {}
+    data_value = None
 
-        keys_all = ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
-        nullables = []
+    keys_all = ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
+    nullables = []
 
-        #  uid
-        result["uid"] = validate_uid(data.get("uid"))
+    #  uid
+    result["uid"] = validate_uid(data.get("uid"))
 
-        # (?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!#$%()*+-./:<>?@^_~])(?=.{12,16})
+    # (?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!#$%()*+-./:<>?@^_~])(?=.{12,16})
 
-        # password >> hashed by plain password in client
-        result["salt"] = data.get("salt")
+    # password >> hashed by plain password in client
+    result["salt"] = data.get("salt")
 
-        result["password"] = data.get("password")  # hash with salt by password \
+    result["password"] = data.get("password")  # hash with salt by password \
 
-        # birth_date
-        result["birthYear"], result["birthMonth"], result["birthDay"] = validate_birth_date(data.get("birthYear"),
-                                                                                            data.get("birthMonth"),
-                                                                                            data.get("birthDay"))
+    # birth_date
+    result["birthYear"], result["birthMonth"], result["birthDay"] = validate_birth_date(data.get("birthYear"),
+                                                                                        data.get("birthMonth"),
+                                                                                        data.get("birthDay"))
 
-        # gender
-        result["gender"] = validate_gender(data.get("gender"))
+    # gender
+    result["gender"] = validate_gender(data.get("gender"))
 
-        return result, "200"
-
-    return _
+    return result
 
 
 # create user
 # 가입 타입 및 조건에 맞게 데이터 파싱: 현재는 없음..ㅋㅋㅋ
 # 소셜이나 전번 가입 시
-def create_user():
-    def _(data):
-        result = {}
+def create_user(data):
+    result = {}
 
-        user = UserModel()
-        user.id = None
-        user.uid = data.get("uid")
-        user.password = make_hashed(data.get("password"))
-        user.salt = data.get("salt")
-        user.birth_year = data.get("birthYear")
-        user.birth_month = data.get("birthMonth")
-        user.birth_day = data.get("birthDay")
-        user.gender = data.get("gender")
+    user = UserModel()
+    user.id = None
+    user.uid = data.get("uid")
+    user.password = make_hashed(data.get("password"))
+    user.salt = data.get("salt")
+    user.birth_year = data.get("birthYear")
+    user.birth_month = data.get("birthMonth")
+    user.birth_day = data.get("birthDay")
+    user.gender = data.get("gender")
 
-        result["user"] = user.create_user()
+    result["user"] = user.create_user()
 
-        if result["user"].get("id", 0) == 0:
-            raise InternalServerErrorException(attribute="create", details="user")
+    if result["user"].get("id", 0) == 0:
+        raise InternalServerErrorException(attribute="create", details="user")
 
-        return result, "200"
-
-    return _
+    return result
 
 
 # create session
-def create_session():
-    def _(data):
-        # if "id" not in data and data["id"] is None:
-        #     TODO: 2018. 04. 20. raise ERROR
-        # pass
+def create_session(data):
+    # if "id" not in data and data["id"] is None:
+    #     TODO: 2018. 04. 20. raise ERROR
+    # pass
 
-        session = SessionModel.create_by_user(data.get("user", {}))
+    session = SessionModel.create_by_user(data.get("user", {}))
 
-        if session.id == 0:
-            raise InternalServerErrorException(attribute="default", details="default")
+    if session.id == 0:
+        raise InternalServerErrorException(attribute="default", details="default")
 
-        data["user"].update({"session": session.create()})
+    data["user"].update({"session": session.create()})
 
-        return data, "200"
-
-    return _
+    return data
 
 
 # auth by email
-def send_auth_mail():
-    def _(req):
-        status = "200"
-        data = {}
+def send_auth_mail(data):
+    result = {}
 
-        return data, "200"
-
-    return _
+    return result

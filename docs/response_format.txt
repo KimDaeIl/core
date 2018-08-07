@@ -7,7 +7,17 @@
     "result": {
 
         # RESULT AS SUCCESS
+        # case: has one data as a result
         "data":{
+        }
+
+        # case: has more than one data(list) as a result
+        "data":{
+            "size": n,
+            "current": n,
+            "list":[
+            ....
+            ]
         }
 
         # RESULT AS ERROR

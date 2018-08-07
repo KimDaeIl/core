@@ -1,10 +1,14 @@
 # Created models.__init__.py by KimDaeil on 03/31/2018
 
 import datetime
+
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import inspect
+from copy import deepcopy
+
 from . import *
 
-__all__ = ["db", "String", "Int", "DateTime", "BigInt", "Bool"]
+__all__ = ["datetime", "inspect", "db", "String", "Int", "DateTime", "Time", "BigInt", "Bool", "Float"]
 
 db = SQLAlchemy()
 
@@ -25,8 +29,11 @@ class BaseColumn(db.Column):
         #
         #     if isinstance(name, str):
         #         kwarg["name"] = name
-
         super().__init__(*args, **kwarg)
+
+    @property
+    def _constructor(self, *args, **kwargs):
+        return BaseColumn
 
 
 class String(BaseColumn):
@@ -50,9 +57,10 @@ class Int(BaseColumn):
 
 
 class BigInt(BaseColumn):
-    def __init__(self, name, *args, **kwargs):
-        args = (name, db.BigInteger) + args
-        super().__init__(*args, **kwargs)
+    impl = db.BigInteger
+
+    def __init__(self, name, **kwargs):
+        super().__init__(name, db.BigInteger, **kwargs)
 
 
 class DateTime(BaseColumn):
@@ -61,10 +69,29 @@ class DateTime(BaseColumn):
         # consider below terms
         # 1. making time zone about server and user
         # 2. make time zone about server
+
         if 'default' not in kwargs:
             kwargs['default'] = datetime.datetime.now()
 
+        if 'server_default' not in kwargs:
+            from sqlalchemy.sql import func
+
+            kwargs['server_default'] = func.now()
+
         super().__init__(name, db.DateTime, **kwargs)
+
+
+class Time(BaseColumn):
+    def __init__(self, name, **kwargs):
+        super().__init__(name, db.Time, **kwargs)
+
+
+class Float(BaseColumn):
+    def __init__(self, name, precision=None, scale=None, **kwargs):
+        if "default" not in kwargs:
+            kwargs["default"] = 0.0
+
+        super().__init__(name, db.Numeric(precision=precision + scale, scale=scale, asdecimal=False), **kwargs)
 
 
 seq_users_id = db.Sequence("seq_users_id", start=1, minvalue=0, increment=1, cache=10, cycle=True, metadata=db.Model.metadata)

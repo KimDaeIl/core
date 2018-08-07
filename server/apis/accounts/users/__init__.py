@@ -12,13 +12,12 @@ __all__ = ["UserModel"]
 class Users(BaseResource):
     def post(self, *args, **kwargs):
         creator = ApiCreator()
-        creator.add(post.validate())
-        creator.add(post.create_user())
-        creator.add(post.create_session())
+        creator.add(post.validate)
+        creator.add(post.create_user)
+        creator.add(post.create_session)
         # creator.add(post.send_auth_mail())
         result = creator.run(
             key=["uid", "password", "birthYear", "birthMonth", "birthDay", "gender", "salt"],
-            req=request,
             **kwargs
         )
 
@@ -28,11 +27,10 @@ class Users(BaseResource):
     def put(self, *args, **kwargs):
         # print(kwargs)
         creator = ApiCreator()
-        creator.add(put.validate())
-        creator.add(put.update_user())
+        creator.add(put.validate)
+        creator.add(put.update_user)
         result = creator.run(
             key=["user_id"],
-            req=request,
             **kwargs
         )
 
@@ -42,10 +40,9 @@ class Users(BaseResource):
     @session_validator()
     def delete(self, *args, **kwargs):
         creator = ApiCreator()
-        creator.add(delete.validate())
-        creator.add(delete.delete_user())
+        creator.add(delete.validate)
+        creator.add(delete.delete_user)
         result = creator.run(
             key=["user_id"],
-            req=request,
             **kwargs)
         return result

@@ -3,11 +3,11 @@ from datetime import datetime
 
 from core.models import *
 from core.models import seq_users_id
-from core.server.utils import make_hashed
+from core.server.utils.common.security import make_hashed
 
 
 class UserModel(db.Model):
-    __tablename__ = 'USERS'
+    __tablename__ = 'users'
 
     id = BigInt("id", primary_key=True, index=True, server_default=seq_users_id.next_value())
     uid = String("uid", 255, index=True)
@@ -54,7 +54,7 @@ class UserModel(db.Model):
     def create_user(self):
         result = {}
 
-        if self.id != 0:
+        if self and self.id != 0:
             db.session.add(self)
             db.session.commit()
             result = self.to_json()
@@ -64,7 +64,7 @@ class UserModel(db.Model):
     def update_user(self):
         result = {}
 
-        if self.id != 0:
+        if self and self.id != 0:
             db.session.add(self)
             db.session.commit()
             result = self.to_json()
@@ -74,7 +74,7 @@ class UserModel(db.Model):
     def delete_user(self):
         result = {}
 
-        if self.id != 0:
+        if self and self.id != 0:
             db.session.delete(self)
             db.session.commit()
             result = self.to_json()
@@ -86,23 +86,19 @@ class UserModel(db.Model):
 
     @classmethod
     def find_by_id(cls, user_id):
-        user = cls()
+        result = cls()
         if user_id and isinstance(user_id, int):
-            temp_user = db.session.query(cls).filter(cls.id == user_id).first()
+            result = db.session.query(cls) \
+                         .filter(cls.id == user_id).first() or result
 
-            if temp_user:
-                user = temp_user
-
-        return user
+        return result
 
     @classmethod
     def find_by_email(cls, email):
-        user = cls()
+        result = cls()
 
         if email:
-            temp_user = db.session.query(cls).filter(cls.uid == email).first()
+            result = db.session.query(cls) \
+                         .filter(cls.uid == email).first() or result
 
-            if temp_user:
-                user = temp_user
-
-        return user
+        return result
