@@ -21,6 +21,7 @@ class UserModel(db.Model):
     receive_marketing = Bool("receive_marketing", default=True, server_default="t")
     gender = String("gender", 1, default="f")
     created_at = DateTime("created_at")
+    deleted_at = DateTime("deleted_at", nullable=True, server_default=None, default=None)
 
     __table_agrs__ = (db.UniqueConstraint("uid"),
                       db.Index("idx_users_uid", "uid", postgresql_using="hash"))
@@ -43,7 +44,8 @@ class UserModel(db.Model):
             "pushToken": self.push_token,
             "push": self.receive_push,
             "marketing": self.receive_marketing,
-            "createdAt": self.created_at.isoformat()
+            "createdAt": self.created_at.strftime("%Y-%m-%d %H:%M:%S") if self.created_at else "",
+            "deleted_at": self.deleted_at.strftime("%Y-%m-%d %H:%M:%S") if self.deleted_at else ""
         }
 
         if self.session:
@@ -91,9 +93,9 @@ class UserModel(db.Model):
     #     self.password = make_hashed("{}{}".format(self.password, self.salt))
 
     @classmethod
-    def find_by_id(cls, user_id):
+    def find_by_id(cls, user_id=0):
         result = cls()
-        if user_id and isinstance(user_id, int):
+        if user_id:
             result = db.session.query(cls) \
                          .filter(cls.id == user_id).first() or result
 

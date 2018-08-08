@@ -7,8 +7,6 @@ from core.server.utils.validations.data import *
 from core.models.users import UserModel
 from . import post, put, delete
 
-__all__ = ["UserModel"]
-
 
 class User(BaseResource):
     def post(self, *args, **kwargs):
@@ -30,28 +28,30 @@ class User(BaseResource):
 
     @session_validator()
     def put(self, *args, **kwargs):
-        # print(kwargs)
+        kwargs["is_put"] = True
         creator = ApiCreator()
-        creator.add(put.validate)
+        creator.add(validate_function)
         creator.add(put.update_user)
         result = creator.run(
-            key=["user_id"],
+            key=put.essential,
+            keys=put.keys,
+            nullable=put.nullable,
+            validation_function=put.validation_function,
             **kwargs
         )
 
-        print(result)
         return result
-
-    def get(self):
-        from flask import current_app
-        return current_app.response_class(data={"get":"dd"})
 
     @session_validator()
     def delete(self, *args, **kwargs):
         creator = ApiCreator()
-        creator.add(delete.validate)
+        creator.add(validate_function)
         creator.add(delete.delete_user)
+        creator.add(delete.delete_session)
         result = creator.run(
-            key=["user_id"],
+            key=delete.essential,
+            keys=delete.keys,
+            nullable=delete.nullable,
+            validation_function=delete.validation_function,
             **kwargs)
         return result
