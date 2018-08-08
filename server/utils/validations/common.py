@@ -1,5 +1,7 @@
 # Created validator.py by KimDaeil on 04/03/2018
 import functools
+import json
+import json.decoder as json_decoder
 
 from core.models.mongos.sessions import SessionMongo
 from core.models.sessions import SessionModel
@@ -22,13 +24,24 @@ def validator_decorator(*args, **kwargs):
             data.update(request.args.to_dict())
             data.update(kwargs)
 
+            # request.get_json() occurs error if it is empty
+            # if request.get_json():
+            #     data.update(request.json)
+
+            try:
+                json_data = request._get_data_for_json(cache=True)
+                if len(json_data) > 0:
+                    data.update(json.loads(json_data, encoding="utf-8"))
+            except json_decoder.JSONDecodeError as e:
+                print(e)
+                raise UnauthorizedException()
+
             need_keys = kwargs.get("key")
             for k in need_keys:
-
                 if k not in data or data[k] == "":
                     print("key >>", k)
                     print("data >>", data)
-                    raise BadRequestException(attribute=k, details="default")
+                    raise UnauthorizedException()
 
             return func(*args, status="200", data=data)
 
@@ -44,7 +57,7 @@ def session_validator():
             client = request.headers.get("Authorization")
 
             # 1. check header has 'Authorization' as client access token
-            if len(client) == 0:
+            if client is None or len(client) == 0:
                 raise UnauthorizedException(attribute="default", details="default")
 
             # find by session from client
@@ -52,14 +65,17 @@ def session_validator():
 
             # if not in server, then raise error as a result of return
             if "id" not in session or session["id"] == 0:
+                print("session_validator >> session is not in mongo server")
                 raise UnauthorizedException(attribute="default", details="default")
 
             server = session.get("session", "")
             if len(server) != len(client):
+                print("session_validator >> invalid session")
                 raise UnauthorizedException(attribute="default", details="user_info")
 
             # check ip address on session is equal with client ip.
             if session.get("ipAddress", "") != request.remote_addr:
+                print("session_validator >> different ip")
                 raise UnauthorizedException(attribute="default", details="user_info")
 
             kwargs.update({"user_id": session.get("id", 0)})

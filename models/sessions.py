@@ -11,7 +11,7 @@ from core.models.mongos.sessions import SessionMongo
 
 
 class SessionModel(db.Model):
-    __tablename__ = 'SESSIONS'
+    __tablename__ = 'sessions'
 
     id = BigInt("id", primary_key=True, index=True, autoincrement=False)
     session = String("session", 256)
@@ -70,7 +70,7 @@ class SessionModel(db.Model):
 
     def delete_session(self):
         session = {}
-        if self.id != 0:
+        if self and self.id != 0:
             db.session.delete(self)
             db.session.commit()
 
@@ -122,7 +122,7 @@ class SessionModel(db.Model):
 
 
 def make_salt(salt):
-    return make_hashed("{}{}".format(salt, datetime.now()))
+    return make_hashed("{}{}".format(salt, datetime.datetime.now()))
 
 
 def generate_session(_id, ip_address, salt):

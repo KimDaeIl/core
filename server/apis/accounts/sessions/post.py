@@ -1,32 +1,25 @@
 # Created post.py by KimDaeil on 04/28/2018
 
 from . import NotFoundException, UnauthorizedException
+from core.server.utils.common.security import make_hashed
 from core.models.sessions import SessionModel
 from core.models.users import UserModel
 from core.server.utils.common.security import make_hashed
+
+keys = ["uid", "password", "salt"]
+nullable = []
+
 
 
 def validate(data):
     result = {}
 
-    keys = ["uid", "password", "salt"]
-    nullable = []
-    validation_function = {
+    keys_all = ["uid", "password", "salt"]
+    nullables = []
 
-    }
-
-    for key in keys:
-        value = None
-
-        if key in data:
-            value = validation_function.get(key, lambda x: x)(data[key])
-        else:
-            if key not in nullable:
-                raise UnauthorizedException()
-
-    for k in keys:
+    for k in keys_all:
         if k in data:
-            if data[k] is None and k in nullable:
+            if data[k] is None and k in nullables:
                 data[k] = "" if isinstance(data[k], str) else 0
 
             result[k] = data[k]

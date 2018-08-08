@@ -9,8 +9,8 @@ class Notifications(BaseResource):
     @session_validator()
     def put(self, *args, **kwargs):
         api_creator = ApiCreator()
-        api_creator.add(put.validate())
-        api_creator.add(put.update_user())
+        api_creator.add(put.validate)
+        api_creator.add(put.update_user)
         result = api_creator.run(
             key=["user_id"],
             req=request,

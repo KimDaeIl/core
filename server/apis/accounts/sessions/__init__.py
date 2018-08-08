@@ -24,9 +24,9 @@ class Sessions(BaseResource):
     @session_validator()
     def put(self, *args, **kwargs):
         creator = ApiCreator()
-        creator.add(put.validate())
-        creator.add(put.update_session())
-        creator.add(put.get_user_info())
+        creator.add(put.validate)
+        creator.add(put.update_session)
+        creator.add(put.get_user_info)
         result = creator.run(
             key=[],
             req=request,
@@ -38,8 +38,8 @@ class Sessions(BaseResource):
     @session_validator()
     def delete(self, *args, **kwargs):
         creator = ApiCreator()
-        creator.add(delete.validate())
-        creator.add(delete.delete_session())
+        creator.add(delete.validate)
+        creator.add(delete.delete_session)
         result = creator.run(
             key=[],
             req=request,
