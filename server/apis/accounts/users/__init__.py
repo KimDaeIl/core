@@ -30,21 +30,19 @@ class User(BaseResource):
 
     @session_validator()
     def put(self, *args, **kwargs):
-        # print(kwargs)
+        kwargs["is_put"] = True
         creator = ApiCreator()
-        creator.add(put.validate)
+        creator.add(validate_function)
         creator.add(put.update_user)
         result = creator.run(
-            key=["user_id"],
+            key=put.essential,
+            keys=put.keys,
+            nullable=put.nullable,
+            validation_function=put.validation_function,
             **kwargs
         )
 
-        print(result)
         return result
-
-    def get(self):
-        from flask import current_app
-        return current_app.response_class(data={"get":"dd"})
 
     @session_validator()
     def delete(self, *args, **kwargs):

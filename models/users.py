@@ -91,9 +91,9 @@ class UserModel(db.Model):
     #     self.password = make_hashed("{}{}".format(self.password, self.salt))
 
     @classmethod
-    def find_by_id(cls, user_id):
+    def find_by_id(cls, user_id=0):
         result = cls()
-        if user_id and isinstance(user_id, int):
+        if user_id:
             result = db.session.query(cls) \
                          .filter(cls.id == user_id).first() or result
 
