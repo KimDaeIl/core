@@ -47,8 +47,8 @@ class SessionModel(db.Model):
             SessionMongo.create_session(self.to_json())
 
     # def update_session(self, user):
-        # self.salt = make_salt(user.get("salt", ""))
-        # self.session = generate_session(user.get("id"), request.remote_addr, self.salt)
+    # self.salt = make_salt(user.get("salt", ""))
+    # self.session = generate_session(user.get("id"), request.remote_addr, self.salt)
 
     def insert_or_update_in_mongo(self):
         session = self.to_json(True)
@@ -64,6 +64,14 @@ class SessionModel(db.Model):
 
         return session
 
+    def delete(self):
+        if self.id:
+            db.session.delete(self)
+            db.session.commit()
+
+            SessionMongo.delete_session(self.to_json())
+
+    # @@ useless more
     def delete_session(self):
         session = {}
         if self and self.id != 0:
@@ -96,7 +104,7 @@ class SessionModel(db.Model):
     def find_by_id(cls, user_id):
         session = cls()
 
-        if user_id and isinstance(user_id, int) and user_id > 0:
+        if user_id:
             temp_session = db.session.query(SessionModel).filter(SessionModel.id == user_id).first()
 
             if temp_session:

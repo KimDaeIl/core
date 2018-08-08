@@ -7,8 +7,6 @@ from core.server.utils.validations.data import *
 from core.models.users import UserModel
 from . import post, put, delete
 
-__all__ = ["UserModel"]
-
 
 class User(BaseResource):
     def post(self, *args, **kwargs):
@@ -47,9 +45,13 @@ class User(BaseResource):
     @session_validator()
     def delete(self, *args, **kwargs):
         creator = ApiCreator()
-        creator.add(delete.validate)
+        creator.add(validate_function)
         creator.add(delete.delete_user)
+        creator.add(delete.delete_session)
         result = creator.run(
-            key=["user_id"],
+            key=delete.essential,
+            keys=delete.keys,
+            nullable=delete.nullable,
+            validation_function=delete.validation_function,
             **kwargs)
         return result

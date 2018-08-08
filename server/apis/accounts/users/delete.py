@@ -1,49 +1,41 @@
 # Created users.delete.py by KimDaeil on 03/31/2018
+from datetime import datetime
+
 from core.models.sessions import SessionModel
-from . import UnauthorizedException, NotFoundException
 from . import UserModel
+from . import validate_int
+from . import UnauthorizedException, NotFoundException
 
-
-def validate(data):
-    result = {}
-
-    keys_all = ["user_id"]
-    nullables = []
-
-    validate_functions = {
-        "user_id": lambda v: v if v and isinstance(v, int) else 0
-    }
-
-    for k in keys_all:
-        if k in data and k in validate_functions:
-            result[k] = validate_functions.get(k)(data[k])
-
-    return result
+essential = ["user_id"]
+keys = ["user_id"]
+nullable = []
+validation_function = {
+    "user_id": lambda x: validate_int(x, raise_value=0)
+}
 
 
 def delete_user(data):
+    print("delete_user")
     result = {}
 
-    if data is None or "user_id" not in data:
-        raise UnauthorizedException(attribute="default", details="user_info")
+    user = UserModel.find_by_id(data.get("user_id", 0))
 
-    user = UserModel.find_by_id(user_id=data.get("user_id", 0))
+    if not user or not user.id:
+        print("users.delete.delete_user >> ", "invalid user information")
+        raise UnauthorizedException()
 
-    print("delete_user >> ", 0, user)
-    if user.id == 0:
-        raise NotFoundException(attribute="user", details="uid")
+    user.deleted_at = datetime.now()
+    user.save()
+    result["user"] = user.to_json()
 
-    print("delete_user >> ", user.to_json())
-    result["user"] = user.delete_user()
-
-    session = SessionModel.find_by_id(user_id=data.get("user_id", 0))
-
-    print("delete_user >> ", 2)
-    if session and session.id != 0:
-        print("delete_user >> ", 2 - 1)
-        result["user"].update({"sesison": session.delete_session()})
-
-        print("delete_user >> ", 2 - 1)
-
-    print("delete_user >> ", 3)
     return result
+
+
+def delete_session(data):
+    session = SessionModel.find_by_id(data["user"]["id"])
+
+    if session and session.id:
+        session.delete()
+        data["user"]["session"] = session.to_json()
+
+    return data
