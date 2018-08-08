@@ -2,6 +2,7 @@
 
 from core.server.apis.common.resource import *
 from core.server.apis.common.exceptions import *
+from core.server.utils.validations.data import *
 
 from core.models.users import UserModel
 from . import post, put, delete
@@ -9,15 +10,19 @@ from . import post, put, delete
 __all__ = ["UserModel"]
 
 
-class Users(BaseResource):
+class User(BaseResource):
     def post(self, *args, **kwargs):
         creator = ApiCreator()
-        creator.add(post.validate)
-        creator.add(post.create_user)
+        creator.add(validate_function)
+        creator.add(post.validate_user_data)
         creator.add(post.create_session)
+        creator.add(post.save)
         # creator.add(post.send_auth_mail())
         result = creator.run(
-            key=["uid", "password", "birthYear", "birthMonth", "birthDay", "gender", "salt"],
+            key=post.essential,
+            keys=post.keys,
+            nullable=post.nullable,
+            validation_function=post.validation_function,
             **kwargs
         )
 
@@ -36,6 +41,10 @@ class Users(BaseResource):
 
         print(result)
         return result
+
+    def get(self):
+        from flask import current_app
+        return current_app.response_class(data={"get":"dd"})
 
     @session_validator()
     def delete(self, *args, **kwargs):

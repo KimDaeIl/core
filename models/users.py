@@ -27,8 +27,8 @@ class UserModel(db.Model):
 
     session = None
 
-    def __init__(self):
-        self.id = 0
+    def __init__(self, _id=None):
+        self.id = _id
 
     def to_json(self):
         print("models.Users.datetime >> ", self.created_at)
@@ -51,6 +51,12 @@ class UserModel(db.Model):
 
         return user
 
+    def save(self):
+        if self.id != 0:
+            db.session.add(self)
+            db.session.commit()
+
+    # @@ not use
     def create_user(self):
         result = {}
 

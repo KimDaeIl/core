@@ -6,20 +6,21 @@ from core.server.meta.common import user_meta
 from core.server.utils.common.security import AESCipher
 
 from core.server.apis.common.exceptions import BadRequestException
+from core.server.apis.common.exceptions import UnauthorizedException
 
 
 def validate_uid(uid):
-    is_valid = False
     email_meta = user_meta.get("email")
 
     if not isinstance(uid, str):
         uid = str(uid)
 
-    is_valid = True if email_meta.get("minLength") <= len(uid) <= email_meta.get("maxLength") else False
-    is_valid = is_valid and bool(re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", uid))
-
-    if not is_valid:
-        raise BadRequestException("uid", "format")
+    if not email_meta.get("minLength") <= len(uid) <= email_meta.get("maxLength"):
+        print("validate_uid >> ", "invalid email length")
+        raise UnauthorizedException()
+    if not bool(re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", uid)):
+        print("validate_uid >> ", "invalid email format")
+        raise UnauthorizedException()
 
     return uid
 

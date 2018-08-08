@@ -1,6 +1,5 @@
 # Created sessions.py by KimDaeil on 04/17/2018
 
-from datetime import datetime
 
 from core.models import *
 from core.server.utils.common.security import AESCipher
@@ -24,12 +23,12 @@ class SessionModel(db.Model):
 
     __table_agrs__ = (db.Index("idx_sessions_session", "session", postgresql_using="hash"))
 
-    def __init__(self):
-        self.id = 0
+    def __init__(self, _id=None):
+        self.id = _id
 
-    def to_json(self, has_salt=False):
+    def to_json(self):
         json = {
-            # "id": self.id,
+            "id": self.id,
             "session": self.session,
             "ipAddress": self.ip_address if self.ip_address else "",
             "platform": self.platform if self.platform else "",
@@ -38,21 +37,18 @@ class SessionModel(db.Model):
             "createdAt": self.created_at.isoformat() if self.created_at else ""
         }
 
-        if has_salt:
-            json["id"] = self.id
-            json["salt"] = self.salt
-
         return json
 
     def save(self):
-
-        if self.id and self.id > 0:
+        if self.id != 0:
             db.session.add(self)
             db.session.commit()
 
-    def update_session(self, user):
-        self.salt = make_salt(user.get("salt", ""))
-        self.session = generate_session(user.get("id"), request.remote_addr, self.salt)
+            SessionMongo.create_session(self.to_json())
+
+    # def update_session(self, user):
+        # self.salt = make_salt(user.get("salt", ""))
+        # self.session = generate_session(user.get("id"), request.remote_addr, self.salt)
 
     def insert_or_update_in_mongo(self):
         session = self.to_json(True)
@@ -80,20 +76,20 @@ class SessionModel(db.Model):
 
         return session
 
-    @classmethod
-    def create_by_user(cls, user):
-        session = cls()
-        if user and "id" in user:
-            user_agent = request.user_agent
-
-            session.id = user.get("id", 0)
-            session.salt = make_salt(user.get("salt", ""))
-            session.session = generate_session(user.get("id"), request.remote_addr, session.salt)
-            session.ip_address = request.remote_addr
-            session.platform = user_agent.platform if user_agent.platform else ""
-            session.platform_version = user_agent.version if user_agent.version else ""
-
-        return session
+    # @classmethod
+    # def create_by_user(cls, user):
+    #     session = cls()
+    #     if user and "id" in user:
+    #         user_agent = request.user_agent
+    #
+    #         session.id = user.get("id", 0)
+    #         session.salt = make_salt(user.get("salt", ""))
+    #         session.session = generate_session(user.get("id"), request.remote_addr, session.salt)
+    #         session.ip_address = request.remote_addr
+    #         session.platform = user_agent.platform if user_agent.platform else ""
+    #         session.platform_version = user_agent.version if user_agent.version else ""
+    #
+    #     return session
 
     # be going to remove this function
     @classmethod
@@ -120,13 +116,9 @@ class SessionModel(db.Model):
 
         return session
 
+    @staticmethod
+    def generate_session(_id, ip_address, salt):
+        session = "{}_{}_{}".format(_id, ip_address, salt)
+        session = AESCipher().encrypt(session)
 
-def make_salt(salt):
-    return make_hashed("{}{}".format(salt, datetime.datetime.now()))
-
-
-def generate_session(_id, ip_address, salt):
-    session = "{}_{}_{}".format(_id, ip_address, salt)
-    session = AESCipher().encrypt(session)
-
-    return session
+        return session

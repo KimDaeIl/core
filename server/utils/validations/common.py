@@ -29,12 +29,25 @@ def validator_decorator(*args, **kwargs):
             #     data.update(request.json)
 
             try:
-                json_data = request._get_data_for_json(cache=True)
-                if len(json_data) > 0:
-                    data.update(json.loads(json_data, encoding="utf-8"))
+                # json_data = request._get_data_for_json(cache=True)
+                json_data = request.get_json()
+
+                if json_data and len(json_data) > 0:
+                    # data.update(json.loads(json_data, encoding="utf-8"))
+                    data.update(json_data)
+
             except json_decoder.JSONDecodeError as e:
-                print(e)
+                print("validator_decorator: json_decoder.JSONDecodeError >> ", e)
                 raise UnauthorizedException()
+
+            # update for remote_addr, platform
+            if request.endpoint in ["users.user_default"]:
+                print("validator_decorator", "endpoint is user_default >> {}".format(request.user_agent))
+                data.update({
+                    "remote_addr": request.remote_addr,
+                    "remote_platform": request.user_agent.version,
+                    "remote_platform_version": request.user_agent.platform
+                })
 
             need_keys = kwargs.get("key")
             for k in need_keys:

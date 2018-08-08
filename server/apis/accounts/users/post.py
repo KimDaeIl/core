@@ -1,87 +1,94 @@
 # Created users.post.py by KimDaeil on 03/31/2018
 
 from core.server.utils.validations.user import *
-from core.server.utils.common.security import make_hashed
+from core.server.utils.common.security import make_hashed, make_session_salt
 
 from core.models.sessions import SessionModel
 from . import InternalServerErrorException
 from . import UserModel
+from . import validate_str, validate_int
 
-essential = []
-keys = []
+essential = ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender", "salt", "remote_addr", "remote_platform", "remote_platform_version"]
+keys = ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender", "salt", "remote_addr", "remote_platform", "remote_platform_version"]
 nullable = []
 validation_function = {
-
+    "uid": lambda x: validate_uid(x),
+    "password": lambda x: validate_str(x, 1, 128),
+    "birthYear": lambda x: validate_int(x, min=1970, max=datetime.now().year, raise_value=1970),
+    "birthMonth": lambda x: validate_int(x, max=12, raise_value=0),
+    "birthDay": lambda x: validate_int(x, max=31, raise_value=0),
+    "gender": lambda x: validate_gender(x),
+    "salt": lambda x: validate_str(x, 2, 128),
+    "remote_addr": lambda x: x,
+    "remote_platform": lambda x: x,
+    "remote_platform_version": lambda x: x
 }
 
 
-# validate: check essential data to sign up
-def validate(data):
-    result = {}
-    data_value = None
-
-    keys_all = ["uid", "password", "birthYear", "birthMonth", "birthDay", "gender"],
-    nullables = []
-
-    #  uid
-    result["uid"] = validate_uid(data.get("uid"))
-
-    # (?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!#$%()*+-./:<>?@^_~])(?=.{12,16})
-
-    # password >> hashed by plain password in client
-    result["salt"] = data.get("salt")
-
-    result["password"] = data.get("password")  # hash with salt by password \
-
-    # birth_date
-    result["birthYear"], result["birthMonth"], result["birthDay"] = validate_birth_date(data.get("birthYear"),
-                                                                                        data.get("birthMonth"),
-                                                                                        data.get("birthDay"))
-
-    # gender
-    result["gender"] = validate_gender(data.get("gender"))
-
-    return result
-
-
-# create user
 # 가입 타입 및 조건에 맞게 데이터 파싱: 현재는 없음..ㅋㅋㅋ
 # 소셜이나 전번 가입 시
-def create_user(data):
-    result = {}
+def validate_user_data(data):
+    aes = AESCipher()
 
     user = UserModel()
-    user.id = None
-    user.uid = data.get("uid")
-    user.password = make_hashed(data.get("password"))
-    user.salt = data.get("salt")
-    user.birth_year = data.get("birthYear")
-    user.birth_month = data.get("birthMonth")
-    user.birth_day = data.get("birthDay")
-    user.gender = data.get("gender")
+    user.uid = data["uid"]
 
-    result["user"] = user.create_user()
+    password = data.get("password", None)
 
-    if result["user"].get("id", 0) == 0:
-        raise InternalServerErrorException(attribute="create", details="user")
+    if not password:
+        print("{}.{} >> ".format(__name__, validate_user_data), "password is invalid")
+        raise UnauthorizedException()
+    user.password = make_hashed(aes.encrypt(password))
+
+    salt = data.get("salt", None)
+    if not salt:
+        print("{}.{} >> ".format(__name__, validate_user_data), "password is salt")
+        raise UnauthorizedException()
+    user.salt = aes.encrypt(salt)
+
+    user.birth_year = data["birthYear"]
+    user.birth_month = data["birthMonth"]
+    user.birth_day = data["birthDay"]
+    user.gender = data["gender"]
+
+    validate_birth_date(user.birth_year, user.birth_month, user.birth_day)
+
+    result = {"user": user,
+              "remote_addr": data["remote_addr"],
+              "remote_platform": data["remote_platform"],
+              "remote_platform_version": data["remote_platform_version"]
+              }
 
     return result
 
 
-# create session
 def create_session(data):
-    # if "id" not in data and data["id"] is None:
-    #     TODO: 2018. 04. 20. raise ERROR
-    # pass
+    user = data["user"]
+    session = SessionModel()
+    session.salt = make_session_salt(user.salt)
+    session.ip_address = data["remote_addr"]
+    session.platform = data.get("remote_platform", "") or ""
+    session.platform_version = data.get("remote_platform_version", "") or ""
 
-    session = SessionModel.create_by_user(data.get("user", {}))
-
-    if session.id == 0:
-        raise InternalServerErrorException(attribute="default", details="default")
-
-    data["user"].update({"session": session.create()})
+    data["session"] = session
 
     return data
+
+
+def save(data):
+    result = {}
+    user = data["user"]
+    user.save()
+
+    print("session.save: user", user.to_json())
+    session = data["session"]
+    session.id = user.id
+    session.session = session.generate_session(user.id, session.ip_address, session.salt)
+    session.save()
+
+    result["user"] = user.to_json()
+    result["user"]["session"] = session.to_json()
+    return result
 
 
 # auth by email

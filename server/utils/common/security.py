@@ -1,5 +1,5 @@
 # Created security.py by KimDaeil on 04/26/2018
-
+from datetime import datetime
 from base64 import b64encode, b64decode
 from hashlib import sha3_256
 from Crypto import Random
@@ -61,6 +61,18 @@ def make_hashed(data):
 
         return b64encode(sha3_256(data).digest()).decode('utf-8')
 
+    return None
+
+
+def make_session_salt(salt):
+    return make_hashed("{}{}".format(salt, datetime.now()))
+
+
+def generate_salt():
+    import random
+    import string
+
+    return ''.join(random.choice(string.lowercase) for _ in range(32))
 
 # def generate_password(user):
 #     if user and isinstance(user, UserModel):
@@ -68,16 +80,17 @@ def make_hashed(data):
 #         user.password = make_hashed("{}{}".format(user.password, user.salt))
 
 
-def make_password_hash(password, salt):
-    hashed_password = ""
-
-    if password and salt:
-        if not isinstance(password, str):
-            password = str(password)
-
-        if not isinstance(salt, str):
-            salt = str(salt)
-
-        hashed_password = make_hashed("{}{}".format(password, salt))
-
-    return hashed_password
+# def make_password_hash(password, salt):
+#     hashed_password = ""
+#
+#     if password and salt:
+#         if not isinstance(password, str):
+#             password = str(password)
+#
+#         if not isinstance(salt, str):
+#             salt = str(salt)
+#
+#         hashed_password = make_hashed("{}{}".format(password, salt))
+#
+#     return hashed_password
+#

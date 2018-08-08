@@ -7,10 +7,11 @@ class SessionMongo:
     @classmethod
     def create_session(cls, session):
 
+        print("create_session >> ", session)
         if session and isinstance(session, dict):
             if "id" in session and isinstance(session["id"], int):
                 print("mongos.SessionMongo.create >> ",
-                      mongo.db.session.update_one({"id": session.get("id", 0)}, {'$set': session}, upsert=True))
+                      mongo.db.session.update_one({"id": session["id"]}, {'$set': session}, upsert=True))
 
         return session
 
@@ -42,5 +43,5 @@ class SessionMongo:
 
             if temp:
                 session = temp
-                
+
         return session
