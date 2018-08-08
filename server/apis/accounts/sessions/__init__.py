@@ -9,9 +9,9 @@ class Sessions(BaseResource):
     # login by uid as email
     def post(self, *args, **kwargs):
         creator = ApiCreator()
-        creator.add(post.validate())
-        creator.add(post.find_user())
-        creator.add(post.create_session())
+        creator.add(post.validate)
+        creator.add(post.find_user)
+        creator.add(post.create_session)
         result = creator.run(
             key=["uid", "password", "salt"],
             req=request,

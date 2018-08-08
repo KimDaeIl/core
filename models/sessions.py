@@ -44,16 +44,11 @@ class SessionModel(db.Model):
 
         return json
 
-    def create(self):
-        session = {}
+    def save(self):
 
         if self.id and self.id > 0:
             db.session.add(self)
             db.session.commit()
-
-            session = self.insert_or_update_in_mongo()
-
-        return session
 
     def update_session(self, user):
         self.salt = make_salt(user.get("salt", ""))

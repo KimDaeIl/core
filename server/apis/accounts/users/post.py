@@ -7,6 +7,13 @@ from core.models.sessions import SessionModel
 from . import InternalServerErrorException
 from . import UserModel
 
+essential = []
+keys = []
+nullable = []
+validation_function = {
+
+}
+
 
 # validate: check essential data to sign up
 def validate():
