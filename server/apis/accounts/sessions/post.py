@@ -1,6 +1,6 @@
 # Created post.py by KimDaeil on 04/28/2018
 
-from . import UserModel,SessionModel
+from . import UserModel, SessionModel
 from core.server.utils.common.security import make_session_salt
 
 from . import NotFoundException, UnauthorizedException

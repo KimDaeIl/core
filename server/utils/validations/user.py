@@ -116,7 +116,15 @@ def encryption_password(password):
 
 def encryption_salt(salt):
     if not salt:
-        print("{}.{} >> ".format(__name__, "encryption_salt"), "password is salt")
+        print("{}.{} >> ".format(__name__, "encryption_salt"), "salt is invalid")
         raise UnauthorizedException()
 
     return AESCipher().encrypt(salt)
+
+
+def decryption_data(data, iv=None):
+    if not data:
+        print("{}.{} >> ".format(__name__, "decryption_data"), "data is invalid")
+        raise UnauthorizedException()
+
+    return AESCipher(iv=iv).decrypt(data)

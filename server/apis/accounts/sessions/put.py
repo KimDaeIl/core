@@ -3,8 +3,7 @@
 from datetime import datetime
 
 from core.server.utils.common.security import AESCipher
-from core.models.sessions import SessionModel
-from core.models.users import UserModel
+from . import SessionModel, UserModel
 
 from . import UnauthorizedException, NotFoundException
 from . import request
