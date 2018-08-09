@@ -4,55 +4,46 @@ from datetime import datetime
 
 from core.server.utils.common.security import AESCipher
 from . import SessionModel, UserModel
-
+from . import validate_int
 from . import UnauthorizedException, NotFoundException
-from . import request
 
-
-def validate(data):
-    result = {}
-
-    session = request.headers.get("Authorization", "")
-
-    session_value = AESCipher().decrypt(session).split("_")
-
-    if len(session_value) != 3:
-        raise UnauthorizedException("default", "user_info")
-
-    try:
-        result["user_id"] = int(session_value[0])
-    except ValueError as e:
-        result["user_id"] = 0
-
-    result["ip_address"] = session_value[1]
-    result["salt"] = session_value[2]
-
-    return result
+essential = ["user_id"]
+keys = ["user_id"]
+nullable = []
+validation_function = {
+    "user_id": lambda x: validate_int(x, raise_value=0)
+}
 
 
 def update_session(data):
     result = {}
 
-    user_id = data.get("user_id", 0)
-    if not isinstance(user_id, int) or user_id == 0:
-        raise UnauthorizedException("default", "user_info")
-
     session = SessionModel.find_by_id(data.get("user_id", 0))
+
+    if not session or not session.id:
+        print("{}.{} >> ".format(__name__, "update_session"), "not found session")
+        raise UnauthorizedException()
+
     session.updated_at = datetime.now()
-    result = session.create()
+
+    result["session"] = session
 
     return result
 
 
-def get_user_info(data):
+def find_user(data):
     result = {}
+    session = data["session"]
+    user = UserModel.find_by_id(session.id)
 
-    user = UserModel.find_by_id(data.get("id", 0))
+    if not user or not user.id:
+        print("{}.{} >> ".format(__name__, "find_user"), "not found user")
 
-    if user.id == 0:
-        raise NotFoundException("user", "default")
+        session.delete()
+        raise UnauthorizedException()
 
-    result.update({"user": user.to_json()})
-    result["user"].update({"session": data})
+    session.save()
+    result["user"] = user.to_json()
+    result["user"]["session"] = session.to_json()
 
     return result
