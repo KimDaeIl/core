@@ -18,4 +18,8 @@ def validate_request(data):
         print("{}.{} >> ".format(__name__, "validate_request"), "not found user")
         raise UnauthorizedException()
 
+    if not user.salt:
+        print("{}.{} >> ".format(__name__, "validate_request"), "not fount logged in data")
+        raise UnauthorizedException()
+
     return {"salt": decryption_data(user.salt)}

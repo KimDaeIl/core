@@ -1,46 +1,46 @@
 # Created delete.py by KimDaeil on 04/28/2018
-
-from core.server.utils.common.security import AESCipher
-from . import SessionModel
+from . import SessionModel, UserModel
 from . import UnauthorizedException, NotFoundException
+from . import validate_int
 
-
-def validate(data):
-    result = {}
-
-    print("session.delete.validate")
-    session = data.get("Authorization", "")
-
-    result["user_id"] = data["user_id"]
-    # session_value = AESCipher().decrypt(session).split("_")
-
-    # if len(session_value) != 3:
-    #     raise UnauthorizedException("default", "user_info")
-    #
-    # try:
-    #     result["user_id"] = int(session_value[0])
-    # except ValueError as e:
-    #     result["user_id"] = 0
-    #
-    # result["ip_address"] = session_value[1]
-    # result["salt"] = session_value[2]
-    return result
+essential = ["user_id"]
+keys = ["user_id"]
+nullable = []
+validation_function = {
+    "user_id": lambda x: validate_int(x, raise_value=0)
+}
 
 
 def delete_session(data):
     result = {}
 
-    user_id = data.get("user_id", 0)
-    if not isinstance(user_id, int) or user_id == 0:
-        raise UnauthorizedException("default", "user_info")
-
     session = SessionModel.find_by_id(data.get("user_id", 0))
 
-    if session.id == 0:
-        raise NotFoundException("session", "default")
+    if not session.id:
+        print("{}.{}".format(__name__, "delete_session"), " not fount session")
+        raise UnauthorizedException()
 
-    session.delete_session()
+    result["session"] = session
 
-    result["session"] = session.to_json()
+    return result
+
+
+def update_user(data):
+    result = {}
+    session = data["session"]
+    user = UserModel.find_by_id(session.id)
+
+    if not user or not user.id:
+        print("{}.{}".format(__name__, "update_user"), " not fount user")
+        raise UnauthorizedException()
+
+    user.password = ""
+    user.salt = ""
+
+    user.save()
+    session.delete()
+
+    result["user"] = user.to_json()
+    result["user"]["session"] = session.to_json()
 
     return result

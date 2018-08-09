@@ -65,11 +65,14 @@ class Session(BaseResource):
     @session_validator()
     def delete(self, *args, **kwargs):
         creator = ApiCreator()
-        creator.add(delete.validate)
+        creator.add(validate_function)
         creator.add(delete.delete_session)
+        creator.add(delete.update_user)
         result = creator.run(
-            key=[],
-            req=request,
+            key=delete.essential,
+            keys=delete.keys,
+            nullable=delete.nullable,
+            validation_function=delete.validation_function,
             **kwargs
         )
         return result
