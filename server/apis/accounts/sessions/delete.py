@@ -1,7 +1,7 @@
 # Created delete.py by KimDaeil on 04/28/2018
 
 from core.server.utils.common.security import AESCipher
-from core.models.sessions import SessionModel
+from . import SessionModel
 from . import UnauthorizedException, NotFoundException
 
 
