@@ -1,7 +1,5 @@
 # Created users.post.py by KimDaeil on 03/31/2018
-
 from core.server.utils.validations.user import *
-from core.server.utils.common.security import make_hashed, make_session_salt
 
 from core.models.sessions import SessionModel
 from . import InternalServerErrorException
@@ -28,23 +26,16 @@ validation_function = {
 # 가입 타입 및 조건에 맞게 데이터 파싱: 현재는 없음..ㅋㅋㅋ
 # 소셜이나 전번 가입 시
 def validate_user_data(data):
-    aes = AESCipher()
+    print(" ==== USERS")
 
-    user = UserModel()
+    user = UserModel.find_by_email(data["uid"])
+    if user.id:
+        print("{}.{} >> ".format(__name__, "validate_user_data"), "existing email as uid")
+        raise UnauthorizedException()
+
     user.uid = data["uid"]
-
-    password = data.get("password", None)
-
-    if not password:
-        print("{}.{} >> ".format(__name__, validate_user_data), "password is invalid")
-        raise UnauthorizedException()
-    user.password = make_hashed(aes.encrypt(password))
-
-    salt = data.get("salt", None)
-    if not salt:
-        print("{}.{} >> ".format(__name__, validate_user_data), "password is salt")
-        raise UnauthorizedException()
-    user.salt = aes.encrypt(salt)
+    user.password = encryption_password(data.get("password", None))
+    user.salt = encryption_salt(data.get("salt", None))
 
     user.birth_year = data["birthYear"]
     user.birth_month = data["birthMonth"]
@@ -63,6 +54,8 @@ def validate_user_data(data):
 
 
 def create_session(data):
+    print(" ==== SESSIONS")
+
     user = data["user"]
     session = SessionModel()
     session.salt = make_session_salt(user.salt)

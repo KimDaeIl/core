@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 
 from core.server.meta.common import user_meta
-from core.server.utils.common.security import AESCipher
+from core.server.utils.common.security import AES, AESCipher, make_hashed, make_session_salt
 
 from core.server.apis.common.exceptions import BadRequestException
 from core.server.apis.common.exceptions import UnauthorizedException
@@ -102,3 +102,29 @@ def validate_gender(gender):
         raise BadRequestException("gender", "format")
 
     return gender
+
+
+def encryption_password(password):
+    if not password:
+        print("{}.{} >> ".format(__name__, "encryption_password"), "password is invalid")
+        raise UnauthorizedException()
+    iv = make_hashed(password[:AES.block_size])
+    hashed = AESCipher(iv=iv.encode()).encrypt(password)
+    hashed = make_hashed(hashed)
+    return hashed
+
+
+def encryption_salt(salt):
+    if not salt:
+        print("{}.{} >> ".format(__name__, "encryption_salt"), "salt is invalid")
+        raise UnauthorizedException()
+
+    return AESCipher().encrypt(salt)
+
+
+def decryption_data(data, iv=None):
+    if not data:
+        print("{}.{} >> ".format(__name__, "decryption_data"), "data is invalid")
+        raise UnauthorizedException()
+
+    return AESCipher(iv=iv).decrypt(data)

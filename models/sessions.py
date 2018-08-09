@@ -46,6 +46,18 @@ class SessionModel(db.Model):
 
             SessionMongo.create_session(self.to_json())
 
+    def delete(self):
+        if self.id:
+            db.session.delete(self)
+            db.session.commit()
+
+            SessionMongo.delete_session(self.to_json())
+
+    #         ++++++++++========+++++++=====+++++====+===++====+=+
+    #         ++++++++++========+++++++=====+++++====+===++====+=+
+    #         ++++++++++========+++++++=====+++++====+===++====+=+
+    #         ++++++++++========+++++++=====+++++====+===++====+=+
+
     # def update_session(self, user):
     # self.salt = make_salt(user.get("salt", ""))
     # self.session = generate_session(user.get("id"), request.remote_addr, self.salt)
@@ -63,13 +75,6 @@ class SessionModel(db.Model):
             del session["_id"]
 
         return session
-
-    def delete(self):
-        if self.id:
-            db.session.delete(self)
-            db.session.commit()
-
-            SessionMongo.delete_session(self.to_json())
 
     # @@ useless more
     def delete_session(self):

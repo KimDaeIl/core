@@ -1,48 +1,52 @@
 # Created post.py by KimDaeil on 04/28/2018
 
+from . import UserModel, SessionModel
+from core.server.utils.common.security import make_session_salt
+
 from . import NotFoundException, UnauthorizedException
-from core.server.utils.common.security import make_hashed
-from core.models.sessions import SessionModel
-from core.models.users import UserModel
-from core.server.utils.common.security import make_hashed
+from . import encryption_password, encryption_salt, validate_uid, validate_str
 
-keys = ["uid", "password", "salt"]
+essential = ["uid", "password", "remote_addr", "remote_platform", "remote_platform_version", "remote_addr", "remote_platform", "remote_platform_version"]
+keys = ["uid", "password", "remote_addr", "remote_platform", "remote_platform_version", "remote_addr", "remote_platform", "remote_platform_version"]
 nullable = []
+validation_function = {
+    "uid": lambda x: validate_uid(x),
+    "password": lambda x: validate_str(x, 1, 128),
 
-
-
-def validate(data):
-    result = {}
-
-    keys_all = ["uid", "password", "salt"]
-    nullables = []
-
-    for k in keys_all:
-        if k in data:
-            if data[k] is None and k in nullables:
-                data[k] = "" if isinstance(data[k], str) else 0
-
-            result[k] = data[k]
-
-    return result
+    "remote_addr": lambda x: x,
+    "remote_platform": lambda x: x,
+    "remote_platform_version": lambda x: x
+}
 
 
 def find_user(data):
-    result = {}
     print("session.post.find_user.data >> ", data)
+
+    result = {
+        "remote_addr": data["remote_addr"],
+        "remote_platform": data["remote_platform"],
+        "remote_platform_version": data["remote_platform_version"]
+    }
 
     user = UserModel.find_by_email(data.get("uid", ""))
 
-    if user.id == 0:
-        raise NotFoundException(attribute="user", details="default")
+    if not user or not user.id:
+        print("session.post.find_user.data ", "not found user information")
+        raise UnauthorizedException()
 
-    password = make_hashed(data.get("password"))
-    # salt = data.get("hash")
+    # ! ---------------
+    user_password = encryption_password(data.get("password", None))
 
-    if user.uid != data.get("uid", "") or user.password != password:
-        raise UnauthorizedException(attribute="default", details="login")
+    if len(user_password) != len(user.password):
+        print("{}.{} >> ".format(__name__, "find_user"), "incorrect password")
+        raise UnauthorizedException()
 
-    result["user"] = user.to_json()
+    for p, u in zip(user_password, user.password):
+        if p != u:
+            print("{}.{} >> ".format(__name__, "find_user"), "incorrect password")
+            raise UnauthorizedException()
+    # ! ---------------
+    result["user"] = user.to_json(has_salt=True)
 
     return result
 
@@ -50,15 +54,21 @@ def find_user(data):
 def create_session(data):
     result = {}
 
-    if "user" in data and "id" in data["user"]:
-        session = SessionModel.find_by_id(data["user"]["id"])
+    user = data["user"]
+    session = SessionModel.find_by_id(user["id"])
 
-        if session.id == 0:
-            session = SessionModel.create_by_user(data["user"])
+    if not session.id:
+        session.id = user["id"]
 
-            session.save()
-        data.get("user", {}).update({"session": session.to_json()})
+    session.session = session.generate_session(user["id"], session.ip_address, session.salt)
+    session.salt = make_session_salt(user["salt"])
+    session.ip_address = data["remote_addr"]
+    session.platform = data.get("remote_platform", "") or ""
+    session.platform_version = data.get("remote_platform_version", "") or ""
 
-        result = data
+    session.save()
+
+    result["user"] = user
+    result["user"]["session"] = session.to_json()
 
     return result

@@ -193,8 +193,10 @@ def validate_function(data):
 
         result[key] = value
 
+    print("validate: result >> ", result)
     if is_put:
-        if not any(result.keys() & set(nullable)):
+        nullable_keys = set(nullable)
+        if nullable_keys and not any(result.keys() & nullable_keys):
             print("validate", "empty data to update")
             raise UnauthorizedException()
 
