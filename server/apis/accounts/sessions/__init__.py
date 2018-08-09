@@ -2,23 +2,31 @@
 
 from core.server.apis.common.resource import *
 from core.server.apis.common.exceptions import *
+from core.server.utils.validations.data import *
+from core.server.utils.validations.user import *
 from . import post, put, delete
 
 
-class Sessions(BaseResource):
+class Session(BaseResource):
     # login by uid as email
     def post(self, *args, **kwargs):
         creator = ApiCreator()
-        creator.add(post.validate)
+        creator.add(validate_function)
         creator.add(post.find_user)
         creator.add(post.create_session)
         result = creator.run(
-            key=["uid", "password", "salt"],
-            req=request,
+            key=post.essential,
+            keys=post.keys,
+            nullable=post.nullable,
+            validation_function=post.validation_function,
             **kwargs
         )
 
         return result
+
+    # get salt for login
+    def get(self, *args, **kwargs):
+        pass
 
     # login by session
     @session_validator()

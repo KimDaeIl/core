@@ -41,13 +41,11 @@ def validator_decorator(*args, **kwargs):
                 raise UnauthorizedException()
 
             # update for remote_addr, platform
-            if request.endpoint in ["users.user_default"]:
-                print("validator_decorator", "endpoint is user_default >> {}".format(request.user_agent))
-                data.update({
-                    "remote_addr": request.remote_addr,
-                    "remote_platform": request.user_agent.version,
-                    "remote_platform_version": request.user_agent.platform
-                })
+            data.update({
+                "remote_addr": request.remote_addr,
+                "remote_platform": request.user_agent.version,
+                "remote_platform_version": request.user_agent.platform
+            })
 
             need_keys = kwargs.get("key")
             for k in need_keys:

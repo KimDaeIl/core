@@ -31,9 +31,7 @@ class UserModel(db.Model):
     def __init__(self, _id=None):
         self.id = _id
 
-    def to_json(self):
-        print("models.Users.datetime >> ", self.created_at)
-        print("models.Users.password >> ", self.password)
+    def to_json(self, has_salt=False):
         user = {
             "id": self.id,
             "uid": self.uid,
@@ -48,8 +46,8 @@ class UserModel(db.Model):
             "deleted_at": self.deleted_at.strftime("%Y-%m-%d %H:%M:%S") if self.deleted_at else ""
         }
 
-        if self.session:
-            user.update({"session": self.session.to_json()})
+        if has_salt:
+            user["salt"] = self.salt
 
         return user
 

@@ -7,26 +7,28 @@ from Crypto.Cipher import AES
 
 
 class AESCipher(object):
-    def __init__(self, key=None):
+
+    def __init__(self, key=None, iv=None):
         self.bs = 32
         if key is None:
             from flask import current_app
             key = current_app.config.get("SECRET_KEY")
 
-        if key is None:
-            # TODO 2018. 04. 22. raise 500 exception if key is emtpy or None
-            pass
-        self.key = sha3_256(key.encode()).digest()
+        self.key = b64encode(sha3_256(key.encode()).digest()).decode("utf-8")[:AES.block_size]
+        self.iv = iv[:AES.block_size] if iv and isinstance(iv, bytes) and len(iv) >= AES.block_size else Random.new().read(AES.block_size)
+        # print("{{password}} AESCipher.iv >>", self.iv)
+        # if not iv or not isinstance(iv, str) or len(iv) < AES.block_size:
+        #     self.iv = Random.new().read(AES.block_size)
+        # else:
+        #     self.iv = iv
 
-    #
     def encrypt(self, raw):
         result = ""
 
         try:
             raw = self._pad(raw)
-            iv = Random.new().read(AES.block_size)
-            cipher = AES.new(self.key, AES.MODE_CBC, iv)
-            result = b64encode(iv + cipher.encrypt(raw)).decode('utf-8')
+            cipher = AES.new(self.key, mode=AES.MODE_CBC, IV=self.iv)
+            result = b64encode(self.iv + cipher.encrypt(raw)).decode('utf-8')
         except Exception as e:
             print("AESCipher.decrypt >> ", e)
 
@@ -41,7 +43,7 @@ class AESCipher(object):
         try:
             enc = b64decode(enc)
             iv = enc[:AES.block_size]
-            cipher = AES.new(self.key, AES.MODE_CBC, iv)
+            cipher = AES.new(self.key, mode=AES.MODE_CBC, IV=iv)
             result = self._unpad(cipher.decrypt(enc[AES.block_size:])).decode('utf-8')
         except Exception as e:
             print("AESCipher.decrypt >> ", e)
@@ -59,6 +61,7 @@ def make_hashed(data):
 
         data = data.encode()
 
+        print(__name__, "make_hashed data >> ", data)
         return b64encode(sha3_256(data).digest()).decode('utf-8')
 
     return None
