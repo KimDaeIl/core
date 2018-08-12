@@ -34,10 +34,6 @@ def update_user(data):
         print("{}.{}".format(__name__, "update_user"), " not fount user")
         raise UnauthorizedException()
 
-    user.password = ""
-    user.salt = ""
-
-    user.save()
     session.delete()
 
     result["user"] = user.to_json()

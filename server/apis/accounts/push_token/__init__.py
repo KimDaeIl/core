@@ -9,6 +9,7 @@ from . import put
 class PushToken(BaseResource):
     @session_validator()
     def put(self, *args, **kwargs):
+        kwargs["is_put"] = True
         api = ApiCreator()
         api.add(put.validate)
         api.add(put.update_token)

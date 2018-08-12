@@ -8,6 +8,7 @@ from . import put
 class Notifications(BaseResource):
     @session_validator()
     def put(self, *args, **kwargs):
+        kwargs["is_put"] = True
         api_creator = ApiCreator()
         api_creator.add(put.validate)
         api_creator.add(put.update_user)
