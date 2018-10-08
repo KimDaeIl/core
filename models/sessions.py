@@ -110,10 +110,7 @@ class SessionModel(db.Model):
         session = cls()
 
         if user_id:
-            temp_session = db.session.query(SessionModel).filter(SessionModel.id == user_id).first()
-
-            if temp_session:
-                session = temp_session
+            session = db.session.query(SessionModel).filter(SessionModel.id == user_id).first() or session
 
         return session
 
