@@ -3,6 +3,8 @@
 from core.server.apis.common.resource import *
 from core.server.apis.common.exceptions import *
 from core.server.utils.validations.data import *
+from core.server.utils.validations.user import validate_uid
+
 
 from core.models.users import UserModel
 from . import post, put, delete, get
@@ -57,11 +59,9 @@ class User(BaseResource):
         return result
 
     """
-    if user request without session, return new salt value 
+    if user request without uid, return new salt value 
     else return user's session
     """
-
-    @session_validator(pass_validate=True)
     def get(self, *args, **kwargs):
         creator = ApiCreator()
         creator.add(validate_function)

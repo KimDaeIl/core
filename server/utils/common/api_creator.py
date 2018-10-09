@@ -7,6 +7,7 @@ from core.server.utils.validations.common import validator_decorator
 
 
 class ApiCreator(object):
+
     def __init__(self):
         self.func_list = []
 

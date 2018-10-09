@@ -26,7 +26,6 @@ validation_function = {
 # 가입 타입 및 조건에 맞게 데이터 파싱: 현재는 없음..ㅋㅋㅋ
 # 소셜이나 전번 가입 시
 def validate_user_data(data):
-    print(" ==== USERS")
 
     user = UserModel.find_by_email(data["uid"])
     if user.id:
@@ -34,7 +33,8 @@ def validate_user_data(data):
         raise UnauthorizedException()
 
     user.uid = data["uid"]
-    user.password = encryption_password(data.get("password", None))
+    salt = data.get("salt", None)
+    user.password = make_hashed(encryption_password(data.get("password", None)) + salt)
     user.salt = encryption_salt(data.get("salt", None))
 
     user.birth_year = data["birthYear"]

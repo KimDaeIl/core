@@ -61,7 +61,7 @@ def make_hashed(data):
 
         data = data.encode()
 
-        print(__name__, "make_hashed data >> ", data)
+        # print(__name__, "make_hashed data >> ", data)
         return b64encode(sha3_256(data).digest()).decode('utf-8')
 
     return None

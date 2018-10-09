@@ -25,6 +25,7 @@ def delete_user(data):
         raise UnauthorizedException()
 
     user.deleted_at = datetime.now()
+    user.uid = "deleted"
     user.save()
     result["user"] = user.to_json()
 
