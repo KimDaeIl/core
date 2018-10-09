@@ -5,7 +5,7 @@ from core.server.apis.common.exceptions import *
 from core.server.utils.validations.data import *
 
 from core.models.users import UserModel
-from . import post, put, delete
+from . import post, put, delete, get
 
 
 class User(BaseResource):
@@ -54,4 +54,24 @@ class User(BaseResource):
             nullable=delete.nullable,
             validation_function=delete.validation_function,
             **kwargs)
+        return result
+
+    """
+    if user request without session, return new salt value 
+    else return user's session
+    """
+
+    @session_validator(pass_validate=True)
+    def get(self, *args, **kwargs):
+        creator = ApiCreator()
+        creator.add(validate_function)
+        creator.add(get.get_salt)
+
+        result = creator.run(
+            key=get.essential,
+            keys=get.keys,
+            nullable=get.nullable,
+            validation_function=get.validation_function,
+            **kwargs
+        )
         return result

@@ -75,7 +75,7 @@ def generate_salt():
     import random
     import string
 
-    return ''.join(random.choice(string.lowercase) for _ in range(32))
+    return ''.join(random.choice(string.ascii_letters + string.punctuation) for _ in range(32))
 
 # def generate_password(user):
 #     if user and isinstance(user, UserModel):
