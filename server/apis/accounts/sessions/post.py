@@ -1,13 +1,13 @@
 # Created post.py by KimDaeil on 04/28/2018
 
 from . import UserModel, SessionModel
-from core.server.utils.common.security import make_session_salt
+from core.server.utils.common.security import make_session_salt, make_hashed, AESCipher
 
 from . import NotFoundException, UnauthorizedException
 from . import encryption_password, encryption_salt, validate_uid, validate_str
 
-essential = ["uid", "password", "remote_addr", "remote_platform", "remote_platform_version", "remote_addr", "remote_platform", "remote_platform_version"]
-keys = ["uid", "password", "remote_addr", "remote_platform", "remote_platform_version", "remote_addr", "remote_platform", "remote_platform_version"]
+essential = ["uid", "password", "remote_addr", "remote_platform", "remote_platform_version", "remote_addr", "remote_platform", "remote_platform_version", "salt"]
+keys = ["uid", "password", "remote_addr", "remote_platform", "remote_platform_version", "remote_addr", "remote_platform", "remote_platform_version", "salt"]
 nullable = []
 validation_function = {
     "uid": lambda x: validate_uid(x),
@@ -15,7 +15,8 @@ validation_function = {
 
     "remote_addr": lambda x: x,
     "remote_platform": lambda x: x,
-    "remote_platform_version": lambda x: x
+    "remote_platform_version": lambda x: x,
+    "salt": lambda x: validate_str(x, 2, 128)
 }
 
 
@@ -35,7 +36,8 @@ def find_user(data):
         raise UnauthorizedException()
 
     # ! ---------------
-    user_password = encryption_password(data.get("password", None))
+    salt = AESCipher().decrypt(user.salt)
+    user_password = make_hashed(encryption_password(data.get("password", None)) + salt)
 
     if len(user_password) != len(user.password):
         print("{}.{} >> ".format(__name__, "find_user"), "incorrect password")
@@ -46,6 +48,18 @@ def find_user(data):
             print("{}.{} >> ".format(__name__, "find_user"), "incorrect password")
             raise UnauthorizedException()
     # ! ---------------
+
+    new_salt = data.get("salt", "")
+    print("new_salt: {}".format(new_salt))
+    if not new_salt:
+        print("session.post.find_user.new_salt ", "invalid new salt")
+        raise UnauthorizedException()
+
+    user.password = make_hashed(encryption_password(data.get("password", None)) + new_salt)
+    user.salt = encryption_salt(data.get("salt", None))
+
+    user.save()
+
     result["user"] = user.to_json(has_salt=True)
 
     return result
