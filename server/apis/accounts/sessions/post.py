@@ -50,7 +50,6 @@ def find_user(data):
     # ! ---------------
 
     new_salt = data.get("salt", "")
-    print("new_salt: {}".format(new_salt))
     if not new_salt:
         print("session.post.find_user.new_salt ", "invalid new salt")
         raise UnauthorizedException()
