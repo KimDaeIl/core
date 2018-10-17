@@ -27,6 +27,8 @@ class AESCipher(object):
 
         try:
             raw = self._pad(raw)
+
+            print(">>> AES.encrypt key {} / iv {}".format(self.key, self.iv))
             cipher = AES.new(self.key, mode=AES.MODE_CBC, IV=self.iv)
             result = b64encode(self.iv + cipher.encrypt(raw)).decode('utf-8')
         except Exception as e:
@@ -44,6 +46,8 @@ class AESCipher(object):
             enc = b64decode(enc)
             iv = enc[:AES.block_size]
             cipher = AES.new(self.key, mode=AES.MODE_CBC, IV=iv)
+
+            print(">>> AES.decrypt key {} / iv {}".format(self.key, self.iv))
             result = self._unpad(cipher.decrypt(enc[AES.block_size:])).decode('utf-8')
         except Exception as e:
             print("AESCipher.decrypt >> ", e)
@@ -61,7 +65,7 @@ def make_hashed(data):
 
         data = data.encode()
 
-        # print(__name__, "make_hashed data >> ", data)
+        print(__name__, "make_hashed data >> ", data)
         return b64encode(sha3_256(data).digest()).decode('utf-8')
 
     return None

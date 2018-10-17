@@ -28,23 +28,22 @@ class Session(BaseResource):
 
         return result
 
-    # get salt for login
-    @session_validator()
-    def get(self, *args, **kwargs):
-        creator = ApiCreator()
-        creator.add(validate_function)
-        creator.add(get.validate_request)
-        result = creator.run(
-            key=get.essential,
-            keys=get.keys,
-            nullable=get.nullable,
-            validation_function=get.validation_function,
-            **kwargs
-        )
+    # @session_validator()
+    # def get(self, *args, **kwargs):
+    #     creator = ApiCreator()
+    #     creator.add(validate_function)
+    #     creator.add(get.validate_request)
+    #     result = creator.run(
+    #         key=get.essential,
+    #         keys=get.keys,
+    #         nullable=get.nullable,
+    #         validation_function=get.validation_function,
+    #         **kwargs
+    #     )
+    #
+    #     return result
 
-        return result
-
-    # login by session
+    # login by session and update login time
     @session_validator()
     def put(self, *args, **kwargs):
         kwargs["is_put"] = True
